@@ -16,11 +16,25 @@
 alias cp='nocorrect cp -i'
 alias mv='nocorrect mv -i'
 alias mkdir='nocorrect mkdir'
-alias rm='rm --preserve-root -v' #prompt before removal & do not remove root & explain what is deleted
-alias emacs='emacs -nw' # emacs not in x11 window
+alias rm='rm -v' #prompt before removal & do not remove root & explain what is deleted
+alias emacs='emacs -nw' #emacs not in x11 window
 alias ll='ls -l' 
 alias la='ls -la'
 alias l.='ls -d .*'
+alias lt='ls -ltr'
+
+if [ -n "$PS1" ] ; then
+  rm ()
+  {
+      ls -FCsd "$@"
+      echo 'remove[ny]? ' | tr -d '\012' ; read
+      if [ "_$REPLY" = "_y" ]; then
+          /bin/rm -rf "$@"
+      else
+          echo '(cancelled)'
+      fi
+  }
+fi
 
 # Colorize the grep command output
 alias grep='grep --color=auto'
@@ -31,13 +45,28 @@ alias fgrep='fgrep --color=auto'
 setopt correctall
 
 # use colors with ls (only on LINUX)
-if [ $R_OSTYPE = LINUX ]; then
-  alias ls='ls -F --color=auto'
-  LS_COLORS='di=96;01:fi=00:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=92:*.o=36:*.cpp=93:*.c=93:*.h=33:*.sh=95'
-  export LS_COLORS
-else
-  alias ls='ls -F'
+# if [ $R_OSTYPE = LINUX ]; then
+#   alias ls='ls -F --color=auto'
+#   LS_COLORS='di=96;01:fi=00:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=92:*.o=36:*.cpp=93:*.c=93:*.h=33:*.sh=95'
+#   export LS_COLORS
+# else
+#   alias ls='ls -F'
+# fi
+#export CLICOLOR=1
+#export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+
+export PATH="/opt/local/libexec/gnubin/:$PATH"
+export MANPATH="/opt/local/libexec/gnuman/:$MANPATH"
+
+if [ "$TERM" != "dumb" ]; then
+    export LS_OPTIONS='--color=auto'
+    eval `dircolors ~/.dir_colors`
 fi
+
+# Useful aliases
+alias ls='gls $LS_OPTIONS -hF'
+#alias ll='ls $LS_OPTIONS -lhF'
+#alias l='ls $LS_OPTIONS -lAhF'
 
 #add ~/bin to you exacutable search path
 export PATH=$PATH:$HOME/bin/
@@ -103,21 +132,34 @@ prt_git () {
     fi
 
     # Get the name of the branch.
-    branch_pattern="^# On branch ([^${IFS}]*)"
-    if [[ ${git_status} =~ ${branch_pattern} ]]; then
-         branch=${match[1]}
-    fi
-
+    # branch_pattern="^# On branch ([^[:space:]]*)"
+    # if [[ ${git_status} =~ ${branch_pattern} ]]; then
+    #     branch=${match[1]}
+    # fi
+    branch=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^..//'` 
     # Set the final branch string.
     echo "${state}(${branch})${remote}${DEFAULT}"
 }
 
-#change the command prompt to use colors and print the current directory
-#export PS1="$(print '%(?.:%).%{\e[0;31m%}:( %?%{\e[0;0m%}) [%{\e[0;32m%}%n%{\e[0;0m%}@%{\e[1;35m%}%m%{\e[0;0m%}:%{\e[0;36m%}%~%{\e[0m%} %{\e[0;33m%}%*%{\e[0;0m%}]\n$ ')"
-#export PS1="$(print '%(?.:%).%{\e[0;31m%}:( %?%{\e[0;0m%}) [%{\e[0;32m%}%n%{\e[0;0m%}@%{\e[1;35m%}%m%{\e[0;0m%}:%{\e[0;36m%}%~%{\e[0m%} %{\e[0;33m%}%*%{\e[0;0m%}] `prt_git`\n$ ')"
-#without color
-#export PS1='[%!]%n@%m:%~$ '
+### battery status in right prompt
+battery_status () {
+    bat_status=$(ioreg -n AppleSmartBattery -r | awk '$1~/Capacity/{c[$1]=$3} END{OFMT="%.2f"; max=c["\"DesignCapacity\""]; print (max>0? 100*c["\"CurrentCapacity\""]/max: "?")}')
+    bat_status=`echo "${bat_status}" | bc -l`
+    # Set color depending on battery status
+    if [[ ${bat_status} -gt 50.00 ]]; then
+        bat_color="${GREEN}"
+    elif [[ ${bat_status} -gt 25.00 ]]; then
+        bat_color="${YELLOW}"
+    else
+        bat_color="${RED}"
+    fi
+    echo "${bat_color}${bat_status} %%${DEFAULT}"
+}
 
+#right prompt
+RPROMPT='`battery_status`'
+
+#change the command prompt to use colors and print the current directory
 ## with this the prompt isn't reprinted when the terminal size changes
 precmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] `prt_git`'}
 export PS1="$ "
@@ -167,5 +209,12 @@ function zle-line-init () {
 function zle-line-finish () {
     echoti rmkx
 }
-zle -N zle-line-init
-zle -N zle-line-finish 
+if [[ -z $EMACS ]]; then
+    zle -N zle-line-init
+    zle -N zle-line-finish 
+fi
+ 
+## FOR MACPORTS
+
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export MANPATH=/opt/local/share/man:$MANPATH
