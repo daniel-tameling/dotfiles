@@ -53,7 +53,7 @@
  '(preview-reference-face ((t (:background "white" :foreground "black")))))
 
 ;; set an enviroment variable to the cluster path
-(setenv "cluster" "/ssh:dt524872@cluster.rz.rwth-aachen.de:~/")
+(setenv "cluster" "/sshx:dt524872@cluster.rz.rwth-aachen.de:~/")
 
 ;; use pdf in tex mode
 (setq TeX-PDF-mode t)
@@ -105,12 +105,59 @@ LaTeX-section-title
 LaTeX-section-toc
 LaTeX-section-section
 LaTeX-section-label))
+;; reftex equation reference without parenthesis
+(setq reftex-label-alist
+      '(("equation" 101 "eq:" "~\\ref{%s}" t (regexp "equations?" "eqs?\\." "eqn\\." "Gleichung\\(\
+en\\)?" "Gl\\."))
+        ))
+
+;; add latex syntax highlighting for autoref reference
+(setq font-latex-match-reference-keywords
+  '(
+    ("autoref" "[{")))
 
 ;; additional repositories for emacs packages
+(require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
+(package-initialize)
+
+;; zsh style completion
+(require 'zlc)
+(zlc-mode t)
+
+(let ((map minibuffer-local-map))
+  ;;; like menu select
+  (define-key map (kbd "C-s")  'zlc-select-next-vertical)
+  (define-key map (kbd "C-w")    'zlc-select-previous-vertical)
+  (define-key map (kbd "C-d") 'zlc-select-next)
+  (define-key map (kbd "C-a")  'zlc-select-previous)
+
+  ;;; reset selection
+  (define-key map (kbd "C-c") 'zlc-reset)
+  )
+
+;; multi-term
+(require 'multi-term)
+;; use zsh for multi-term
+(setq multi-term-program "/bin/zsh")
+;; cycle through terminals with M-[ and M-]
+(add-hook 'term-mode-hook
+          (lambda ()
+            (add-to-list 'term-bind-key-alist '("M-[" . multi-term-prev))
+            (add-to-list 'term-bind-key-alist '("M-]" . multi-term-next))))
+;; paste into terminal buffer
+(add-hook 'term-mode-hook
+          (lambda ()
+            (define-key term-raw-map (kbd "C-y") 'term-paste)))
+
 ;; ido-mode
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+
+;; ido order and extension excluded from completion in emacs
+(setq ido-file-extensions-order '(".tex" ".bib" ".cpp" ".h" ".py" ".emacs"))
+(setq ido-ignore-extensions t)
+(setq completion-ignored-extensions '("synctex.gz" "_.tex" "_.log" "_.prv/" "auto/" ".DS_Store"))
