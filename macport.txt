@@ -1,0 +1,10 @@
+The following ports are currently installed:
+  aspell @0.60.6.1_0 (active)
+  aspell-dict-en @7.1_0 (active)
+  clisp @2.49_2 (active)
+  coreutils @8.22_0 (active)
+  emacs @24.3_1 (active)
+  gcc48 @4.8.2_0 (active)
+  git-core @1.8.5.5_0+credential_osxkeychain+doc+pcre+perl5_12+python27 (active)
+  gnuplot @4.6.5_0+aquaterm+luaterm+pangocairo+wxwidgets+x11 (active)
+  openmpi-default @1.7.4_0+gcc48 (active)

@@ -44,6 +44,11 @@ alias fgrep='fgrep --color=auto'
 #autocorrection
 setopt correctall
 
+# if [ "$TERM" != "dumb" ]; then
+#     export LS_OPTIONS='--color=auto'
+#     eval `dircolors ~/.dir_colors`
+# fi
+
 # use colors with ls (only on LINUX)
 # if [ $R_OSTYPE = LINUX ]; then
 #   alias ls='ls -F --color=auto'
@@ -55,9 +60,6 @@ setopt correctall
 #export CLICOLOR=1
 #export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
-export PATH="/opt/local/libexec/gnubin/:$PATH"
-export MANPATH="/opt/local/libexec/gnuman/:$MANPATH"
-
 if [ "$TERM" != "dumb" ]; then
     export LS_OPTIONS='--color=auto'
     eval `dircolors ~/.dir_colors`
@@ -68,12 +70,10 @@ alias ls='gls $LS_OPTIONS -hF'
 #alias ll='ls $LS_OPTIONS -lhF'
 #alias l='ls $LS_OPTIONS -lAhF'
 
-#add ~/bin to you exacutable search path
-export PATH=$PATH:$HOME/bin/
-
 #define you command history and size
 export HISTFILE=$HOME/.zsh_history
 export HISTSIZE=1000
+export SAVEHIST=$HISTSIZE
 
 ## git stuff for prompt; modified Lucas' version 
 setopt prompt_subst
@@ -172,9 +172,6 @@ compinit -C
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' \
     'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-#to use Elmar's ejobs and ehosts
-export PATH=$PATH:~/.local/bin
-
 # http://zshwiki.org/home/zle/bindkeys ;to make keys do what they are supposed to
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
@@ -209,12 +206,9 @@ function zle-line-init () {
 function zle-line-finish () {
     echoti rmkx
 }
-if [[ -z $EMACS ]]; then
+#activate only when supported
+if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
     zle -N zle-line-init
     zle -N zle-line-finish 
 fi
- 
-## FOR MACPORTS
 
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-export MANPATH=/opt/local/share/man:$MANPATH
