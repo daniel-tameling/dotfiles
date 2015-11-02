@@ -1,48 +1,4 @@
-# ================================================================
-# Dieses Profile wird bei jedem Login von der zsh durchlaufen.
-# Sie koennen es unter Verwendung der zsh-Syntax nach Ihren 
-# Beduerfnissen anpassen.
-#
-# Wenn Sie zum Arbeiten eine andere Shell als die zsh - z.B. die
-# tcsh - wuenschen, sollten Sie AM ENDE dieser Datei die folgenden 
-# Zeilen hinzufuegen:
-#
-#     if [[ -o login ]]; then
-#        tcsh; exit
-#     fi
-# ================================================================
-
-#always prompt befor overwriting on cp or mv & nocorrection for commands 
-alias cp='nocorrect cp -i'
-alias mv='nocorrect mv -i'
-alias mkdir='nocorrect mkdir'
-alias rm='rm -v' #prompt before removal & do not remove root & explain what is deleted
-alias emacs='emacs -nw' #emacs not in x11 window
-alias ll='ls -l' 
-alias la='ls -la'
-alias l.='ls -d .*'
-alias lt='ls -ltr'
-
-if [ -n "$PS1" ] ; then
-  rm ()
-  {
-      ls -FCsd "$@"
-      echo 'remove[ny]? ' | tr -d '\012' ; read
-      if [ "_$REPLY" = "_y" ]; then
-          /bin/rm -rf "$@"
-      else
-          echo '(cancelled)'
-      fi
-  }
-fi
-
-# Colorize the grep command output
-alias grep='grep --color=auto'
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
-
-#autocorrection
-setopt correctall
+#!/bin/zsh
 
 # if [ "$TERM" != "dumb" ]; then
 #     export LS_OPTIONS='--color=auto'
@@ -70,10 +26,52 @@ alias ls='gls $LS_OPTIONS -hF'
 #alias ll='ls $LS_OPTIONS -lhF'
 #alias l='ls $LS_OPTIONS -lAhF'
 
+#always prompt befor overwriting on cp or mv & nocorrection for commands 
+alias cp='nocorrect cp -i'
+alias mv='nocorrect mv -i'
+alias mkdir='nocorrect mkdir'
+alias rm='rm -v' #prompt before removal & do not remove root & explain what is deleted
+alias emacs='emacs -nw' #emacs not in x11 window
+alias ll='ls -l' 
+alias la='ls -la'
+alias l.='ls -d .*'
+alias lt='ls -ltr'
+alias lld='ls -ld *(/)'
+
+if [ -n "$PS1" ] ; then
+  rm ()
+  {
+      ls -FCsd "$@"
+      echo 'remove[ny]? ' | tr -d '\012' ; read
+      if [ "_$REPLY" = "_y" ]; then
+          /bin/rm -rf "$@"
+      else
+          echo '(cancelled)'
+      fi
+  }
+fi
+
+# Colorize the grep command output
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+#autocorrection
+setopt correctall
+
 #define you command history and size
 export HISTFILE=$HOME/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=$HISTSIZE
+
+# don't save commands with trailing space in history
+setopt hist_ignore_space
+
+# autocd 
+setopt autocd
+
+# zmv
+autoload zmv
 
 ## git stuff for prompt; modified Lucas' version 
 setopt prompt_subst
@@ -116,7 +114,7 @@ prt_git () {
         state="${RED}"
     fi
     # Set arrow icon based on status against remote.
-    remote_pattern="# Your branch is (.*) of"
+    remote_pattern="Your branch is (.*) of"
     if [[ ${git_status} =~ ${remote_pattern} ]]; then
         if [[ ${match[1]} == "ahead" ]]; then
             remote="\xe2\x86\x91"
@@ -126,16 +124,12 @@ prt_git () {
     else
         remote=""
     fi
-    diverge_pattern="# Your branch and (.*) have diverged"
+    diverge_pattern="Your branch and (.*) have diverged"
     if [[ ${git_status} =~ ${diverge_pattern} ]]; then
         remote="\xe2\x86\x95"
     fi
 
     # Get the name of the branch.
-    # branch_pattern="^# On branch ([^[:space:]]*)"
-    # if [[ ${git_status} =~ ${branch_pattern} ]]; then
-    #     branch=${match[1]}
-    # fi
     branch=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^..//'` 
     # Set the final branch string.
     echo "${state}(${branch})${remote}${DEFAULT}"
