@@ -1,3 +1,12 @@
+;; garbage collection treshold to 20 MB during initialization
+(setq default-gc-cons-threshold gc-cons-threshold)
+(setq gc-cons-threshold 20000000)
+;; reset garbage collection to 800 kB
+(add-hook 'emacs-startup-hook 'my/restore-gc-threshold)
+(defun my/restore-gc-threshold ()
+  "Reset `gc-cons-threshold' to its default value."
+  (setq gc-cons-threshold default-gc-cons-threshold))
+
 ;; load color theme
 (load-theme 'tango t)
 ;; change emacs indentation style
@@ -8,6 +17,24 @@
 (setq-default tab-width 2)
 (defvaralias 'c-basic-offset 'tab-width)
 (defvaralias 'cperl-indent-level 'tab-width)
+
+;; function for inserting a for-statement
+(define-skeleton my-for-statement
+  "Insert a for () {...} skeleton."
+  nil
+  \n "for () {" \n > _ \n -2 "}" \n)
+(define-skeleton c-for
+  "Inserts a C for loop template."
+  nil
+  > "for (;;){" \n
+  > _ \n
+  "}" > \n
+  )
+;; function for inserting a printf-statement
+(define-skeleton my-printf-statement
+  "Insert a for () {...} skeleton."
+  nil
+  \n "printf(" > _ ");")
 
 ;; highlight FIXME, TODO ... in C like programs
 (add-hook 'c-mode-common-hook
@@ -20,10 +47,7 @@
 (set-face-foreground 'font-lock-warning-face "slate gray")
 
 ;; set path to spell checking
-;; iMac
-(setq-default ispell-program-name "/usr/local/macports/bin/aspell")
-;; Macbook Air
-;;(setq-default ispell-program-name "/opt/local/bin/aspell")
+(setq-default ispell-program-name "/opt/local/bin/aspell")
 ;; enable spell checking automatically in tex files
 (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
 (add-hook 'LaTeX-mode-hook 'flyspell-mode) ; enable spell checking 
@@ -56,9 +80,6 @@
  ;; If there is more than one, they won't work right.
  '(preview-reference-face ((t (:background "white" :foreground "black")))))
 
-;; set an enviroment variable to the cluster path
-(setenv "cluster" "/sshx:dt524872@cluster.rz.rwth-aachen.de:~/")
-
 ;; use pdf in tex mode
 (setq TeX-PDF-mode t)
 
@@ -72,10 +93,6 @@
 ;(server-start)
 
 ;; set path so that auctex finds tex and ghostscript
-;; iMac
-(setenv "PATH" (concat "/usr/local/macports/bin:" (getenv "PATH")))
-(setq exec-path (append '("/usr/local/macports/bin") exec-path))
-;; Macbook Air
 ;; (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 ;; (setq exec-path (append '("/usr/local/bin") exec-path))
 ;; (setenv "PATH" (concat "/usr/texbin:" (getenv "PATH")))
@@ -130,9 +147,8 @@ en\\)?" "Gl\\."))
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
+(setq package-enable-at-startup nil)
 
-;; multi-term
-(require 'multi-term)
 ;; use zsh for multi-term
 (setq multi-term-program "/bin/zsh")
 ;; cycle through terminals with M-[ and M-]
@@ -155,39 +171,18 @@ en\\)?" "Gl\\."))
 (setq ido-ignore-extensions t)
 (setq completion-ignored-extensions '("synctex.gz" "_.tex" "_.log" "_.prv/" "auto/" ".DS_Store"))
 
-;; git commit package
-(require 'git-commit)
-
 ;; org mode
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((dot . t))) ; this line activates dot
-
-;; auto-complete
-(require 'auto-complete)
-; default config of auto-complete
-(require 'auto-complete-config)
-(ac-config-default)
-
-;; yasnippet
-(require 'yasnippet)
-;(yas-global-mode 1)
-(yas-reload-all)
-(add-hook 'prog-mode-hook #'yas-minor-mode)
 
 ;; Fix iedit bug in Mac
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
 ;; semantic
 (semantic-mode 1)
-;; let's define a function which adds semantic as a suggestion backend to auto complete
-;; and hook this function to c-mode-common-hook
-(defun my:add-semantic-to-autocomplete()
-  (add-to-list 'ac-sources 'ac-source-semantic)
-  )
-(add-hook 'c-mode-common-hook 'my:add-semantic-to-autocomplete)
-;; turn on automatic reparsing of open buffers in semantic
 (global-semantic-idle-scheduler-mode 1)
+(global-semantic-idle-completions-mode 1)
 
 ;; increase font size for graphic displays
 (if (display-graphic-p)

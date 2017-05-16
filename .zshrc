@@ -22,9 +22,12 @@ if [ "$TERM" != "dumb" ]; then
 fi
 
 # Useful aliases
-alias ls='gls $LS_OPTIONS -hF'
-#alias ll='ls $LS_OPTIONS -lhF'
-#alias l='ls $LS_OPTIONS -lAhF'
+alias ls='ls $LS_OPTIONS -hF'
+alias ll='ls -l' 
+alias la='ls -la'
+alias l.='ls -d .*'
+alias lt='ls -ltr'
+alias lld='ls -ld *(/)'
 
 #always prompt befor overwriting on cp or mv & nocorrection for commands 
 alias cp='nocorrect cp -i'
@@ -32,11 +35,6 @@ alias mv='nocorrect mv -i'
 alias mkdir='nocorrect mkdir'
 alias rm='rm -v' #prompt before removal & do not remove root & explain what is deleted
 alias emacs='emacs -nw' #emacs not in x11 window
-alias ll='ls -l' 
-alias la='ls -la'
-alias l.='ls -d .*'
-alias lt='ls -ltr'
-alias lld='ls -ld *(/)'
 
 if [ -n "$PS1" ] ; then
   rm ()
@@ -56,15 +54,14 @@ alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 
-#autocorrection
+# autocorrection
 setopt correctall
 
-#define you command history and size
+# command history 
 export HISTFILE=$HOME/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=$HISTSIZE
-
-# don't save commands with trailing space in history
+setopt histignorealldups sharehistory
 setopt hist_ignore_space
 
 # autocd 
@@ -200,12 +197,34 @@ RPROMPT='`battery_status`'
 #change the command prompt to use colors and print the current directory
 ## with this the prompt isn't reprinted when the terminal size changes
 #precmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] `prt_git`'}
-precmd() {vcs_info; print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
+# precmd() {vcs_info; print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
+# PS1="%(!.#.$) "
+precmd() {vcs_info}
+prmptcmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
+precmd_functions=(prmptcmd)
 PS1="%(!.#.$) "
 
 ## Completions
-autoload -U compinit
-compinit -C
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 ## case-insensitive (all),partial-word and then substring completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' \

@@ -1,0 +1,26 @@
+IMAPAccount PrivatGmail
+Host imap.gmail.com
+User johndoe@gmail.com
+# UseIMAPS yes
+SSLType IMAPS
+SSLVersions TLSv1.2
+CertificateFile ~/myMail/gmail/gmail.crt
+CertificateFile ~/myMail/gmail/google.crt
+CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
+AuthMechs LOGIN 
+PassCmd passcmd
+  
+IMAPStore gmail-remote
+Account PrivatGmail
+
+MaildirStore gmail-local
+Path ~/myMail/gmail/
+Inbox ~/myMail/gmail/INBOX
+
+Channel gmail
+Master :gmail-remote:
+Slave :gmail-local:
+Patterns "INBOX" "[Gmail]/Sent Mail" "[Gmail]/Trash" "[Gmail]/Drafts" "[Gmail]/Starred"
+Create Both
+Expunge Both
+SyncState *
