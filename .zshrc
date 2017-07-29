@@ -1,10 +1,5 @@
 #!/bin/zsh
 
-# if [ "$TERM" != "dumb" ]; then
-#     export LS_OPTIONS='--color=auto'
-#     eval `dircolors ~/.dir_colors`
-# fi
-
 # use colors with ls (only on LINUX)
 # if [ $R_OSTYPE = LINUX ]; then
 #   alias ls='ls -F --color=auto'
@@ -213,7 +208,7 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
+# eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
