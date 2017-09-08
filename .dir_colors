@@ -213,6 +213,7 @@ EXEC 01;32
 .html 00;33
 .css 00;33
 .js 00;33
+.lua  00;33
 
 # with help from gcc man page
 .py  00;33
