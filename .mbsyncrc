@@ -16,6 +16,7 @@ Account PrivatGmail
 MaildirStore gmail-local
 Path ~/myMail/gmail/
 Inbox ~/myMail/gmail/INBOX
+SubFolders Verbatim
 
 Channel gmail
 Master :gmail-remote:
