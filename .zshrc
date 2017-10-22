@@ -263,5 +263,10 @@ function zle-line-finish () {
 if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
     zle -N zle-line-init
     zle -N zle-line-finish 
+   # for terminator and xfce-terminal
+   bindkey ';5D' emacs-backward-word
+   bindkey ';5C' emacs-forward-word
+   # for st
+   bindkey '5D' emacs-backward-word
+   bindkey '5C' emacs-forward-word
 fi
-
