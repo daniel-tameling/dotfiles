@@ -1,0 +1,12 @@
+Settings-Manger -> Appearance -> Style: xfce-curve
+Settings-Manger -> Appearance -> Icons: Elementary GTK Dark NG
+
+Panel1: Applications Menu; Whisker Menu; Window Buttons; Separator;
+Workplace Switcher; PulseAudio Plugin; Clock; Notification Area; Action
+Buttons
+
+Panel2: Show Desktop; Separator; Terminal; Task Manager; Settings
+Manager; File Manager; Wesnoth; Browser; Application Finder; Separator;
+Directory Menu; Weather Update
+
+sddm.conf in /etc/
