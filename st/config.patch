@@ -1,0 +1,75 @@
+--- config.def.h	2017-10-22 20:46:34.000000000 +0200
++++ config.h	2017-10-22 20:54:33.000000000 +0200
+@@ -5,7 +5,11 @@
+  *
+  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
+  */
+-char font[] = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
++/* static char font[] = "Liberation Mono:pixelsize=12:antialias=false:autohint=false"; */
++/* static char font[] = "Monospace:size=12:antialias=false:autohint=false"; */
++/* static char font[] = "DejaVu Sans Mono:style=Bold:pixelsize=14:antialias=true:autohint=true";  */
++static char font[] = "Hack:size=12:antialias=false:autohint=false";
++static int borderpx = 2;
+ int borderpx = 2;
+ 
+ /*
+@@ -84,34 +88,33 @@
+ 
+ /* Terminal colors (16 first used in escape sequence) */
+ const char *colorname[] = {
+-	/* 8 normal colors */
+-	"black",
+-	"red3",
+-	"green3",
+-	"yellow3",
+-	"blue2",
+-	"magenta3",
+-	"cyan3",
+-	"gray90",
+-
+-	/* 8 bright colors */
+-	"gray50",
+-	"red",
+-	"green",
+-	"yellow",
+-	"#5c5cff",
+-	"magenta",
+-	"cyan",
+-	"white",
+-
+-	[255] = 0,
+-
+-	/* more colors can be added after 255 to use with DefaultXX */
+-	"#cccccc",
+-	"#555555",
++  /* 8 normal colors */
++  [0] = "#000000", /* "black", */
++  [1] = "#f30d0d", /* "red", */
++  [2] = "#00e600", /* "green", */
++  [3] = "#e6e600", /* "yellow", */
++  [4] = "#006aec", /* "blue", */
++  [5] = "#e600e6", /* "magenta", */
++  [6] = "#00d8d8", /* "cyan", */
++  [7] = "#d3d3d3", /* "white", */
++ 
++  /* 8 bright colors */
++  [8] =  "#555555", /* "black", */
++  [9] =  "#f30000", /* "red", */
++  [10] = "#00f300", /* "green", */
++  [11] = "#eaea00", /* "yellow", */
++  [12] = "#006df3", /* "blue", */
++  [13] = "#f300f3", /* "magenta", */
++  [14] = "#00f3f3", /* "cyan", */
++  [15] = "#f3f3f3", /* "white", */
++ 
++  /* more colors can be added after 255 to use with DefaultXX */
++  /* [256] = "#cccccc", */
++  /* [257] = "#555555", */
++  [256] = "#898989",
++  [257] = "#898989",
+ };
+ 
+-
+ /*
+  * Default colors (colorname index)
+  * foreground, background, cursor, reverse cursor
