@@ -73,30 +73,6 @@ if [ "$TERM" != "dumb" ]; then
   fi
 fi
  
-prompt_command () {
-    local err_prompt=`prt_ret`
-    export PS1="${err_prompt}`prt_virtualenv`[`prt_username`@`prt_hostname`:`prt_dir` `prt_time`]`prt_git`\n\[${TURNOFF}\]$ \[${TURNOFF}\]"
-}
-
-PROMPT_COMMAND=prompt_command
-
-prt_ret () {
-    RET=$?
-    if [ $RET -ne 0 ]; then
-        echo "\[${RED}\]O.o ${RET} \[${TURNOFF}\]"
-    else
-        echo "\[${TURNOFF}\]:) \[${TURNOFF}\]"
-    fi
-}
-
-prt_virtualenv () {
-    if [ $VIRTUAL_ENV ]; then
-        d=`dirname $VIRTUAL_ENV`
-        parent="`basename \`dirname $VIRTUAL_ENV\``/`basename $VIRTUAL_ENV`"
-        echo "\[${MAGENTA}\]($parent)\[${TURNOFF}\] "
-    fi
-}
-
 prt_git () {
     # Check if inside a git repo
     git branch > /dev/null 2>&1
@@ -142,29 +118,41 @@ prt_git () {
     echo "${state}(${branch})${remote}\[${TURNOFF}\]"
 }
 
-prt_username () {
-    who=`whoami`
-    if [ $who = "root" ]; then
-        echo "\[${BRED}\]${who}\[${TURNOFF}\]"
-    else
-        echo "\[${GREEN}\]${who}\[${TURNOFF}\]"
-    fi
+prt_ret () {
+  local RET=$?
+  if [[ ${RET} != 0 ]]; then
+    echo "\[${RED}\][${RET}]\[${TURNOFF}\]"
+  fi
 }
-
-prt_hostname () {
-    echo "\[${MAGENTA}\]\h\[${TURNOFF}\]"
+ 
+prt_user () {
+ echo "\[${GREEN}\]\u\[${TURNOFF}\]"
 }
-
-prt_dir () {
-    echo "\[${CYAN}\]\w\[${TURNOFF}\]"
+ 
+prt_host () {
+  echo "\[${MAGENTA}\]\h\[${TURNOFF}\]"
 }
-
+ 
+prt_user_host () {
+  echo "\[${GREEN}\][\u|\h]\[${TURNOFF}\]"
+}
+ 
+prt_path () {
+  echo "\[${CYAN}\]\w\[${TURNOFF}\]"
+}
+ 
 prt_time () {
-    val=`date +"%k:%M:%S"`
-    echo "\[${YELLOW}\]$val\[${TURNOFF}\]"
+  echo "\[${YELLOW}\]\t\[${TURNOFF}\]"
+}
+ 
+set_prompt () {
+  local err_prompt=`prt_ret`
+  PS1="`prt_user_host` `prt_time` `prt_path` ${err_prompt}\n\[${TURNOFF}\]$ \[${TURNOFF}\]"
 }
 
 if [ "$TERM" != "dumb" ]; then 
+  PROMPT_COMMAND=set_prompt
+
   bind "set completion-ignore-case on"
   bind "set show-all-if-ambiguous on"
 fi
