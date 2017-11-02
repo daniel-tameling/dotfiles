@@ -51,5 +51,8 @@
 ;; ido-mode
 (load "~/.emacs.d/init_files/init_ido")
 
+;; helm-mode
+(load "~/.emacs.d/init_files/init_helm")
+
 ;; mail, mu4e
 (load "~/.emacs.d/init_files/init_mu4e")
