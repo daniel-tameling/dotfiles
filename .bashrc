@@ -1,7 +1,29 @@
-. /usr/local/etc/.bash
+alias ls='ls -hF --color=auto'
+eval `dircolors ~/.dir_colors`
 
+alias cp='cp -i'
+alias mv='mv -i'
 alias ll='ls -l'
 alias la='ls -la'
+alias l.='ls -d .*'
+alias lt='ls -ltr'
+alias lld='\ls -hld --color=always */' # execute without -F
+alias emacs='emacs -nw'
+export EDITOR='emacs -nw'
+
+# saver remove
+if [ -n "$PS1" ] ; then
+  rm ()
+  {
+    ls -hFCsd "$@"
+    echo 'remove[ny]? ' | tr -d '\012' ; read
+    if [ "_$REPLY" = "_y" ]; then
+        /bin/rm -rf "$@"
+    else
+        echo '(cancelled)'
+    fi
+  }
+fi
 
 #colors for prompt
 if [ "$TERM" != "dumb" ]; then
@@ -141,3 +163,13 @@ prt_time () {
     val=`date +"%k:%M:%S"`
     echo "\[${YELLOW}\]$val\[${TURNOFF}\]"
 }
+
+if [ "$TERM" != "dumb" ]; then 
+  bind "set completion-ignore-case on"
+  bind "set show-all-if-ambiguous on"
+fi
+ 
+shopt -s autocd
+export HISTCONTROL=ignoreboth
+export HISTSIZE=50000
+export HISTFILESIZE=50000
