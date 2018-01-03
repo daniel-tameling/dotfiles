@@ -109,8 +109,8 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true 
 zstyle ':vcs_info:*' unstagedstr '%F{1}'
 zstyle ':vcs_info:*' stagedstr '%F{3}'
-zstyle ':vcs_info:*' actionformats '%F{2}%u%c(%b)%m%f-%F{1}[%a]%f '
-zstyle ':vcs_info:*' formats '%F{2}%u%c(%b)%m%f '
+zstyle ':vcs_info:*' actionformats '%F{2}%u%c%b%m%f-%F{1}[%a]%f'
+zstyle ':vcs_info:*' formats '%F{2}%u%c%b%m%f'
 # hook whether ahead/behind remote
 zstyle ':vcs_info:git*+set-message:*' hooks git-st
 function +vi-git-st() {
@@ -153,7 +153,7 @@ RPROMPT='`battery_status`'
 #change the command prompt to use colors and print the current directory
 ## with this the prompt isn't reprinted when the terminal size changes
 precmd() {vcs_info}
-prmptcmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
+prmptcmd() {print -P '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f ${vcs_info_msg_0_}%(?.. %F{red}[%?]%f)'}
 precmd_functions=(prmptcmd)
 PS1="%(!.#.$) "
 
