@@ -136,6 +136,7 @@ precmd() {vcs_info}
 prmptcmd() {print -P '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f ${vcs_info_msg_0_}%(?.. %F{red}[%?]%f)'}
 precmd_functions=(prmptcmd)
 precmd() {err=$?; print -nP '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'`~/git-info.py`; if [[ $err != 0 ]]; then print -nP ' %F{red}[${err}]%f'; fi; print -n '\n'}
+precmd() {err=$?; print -nP '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'`~/go-git-info/go-git-info`; if [[ $err != 0 ]]; then print -nP ' %F{red}[${err}]%f'; fi; print -n '\n'}
 PS1="%(!.#.$) "
 
 ## Completions
