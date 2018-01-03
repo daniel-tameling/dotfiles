@@ -90,8 +90,8 @@ BGRAY="%{\e[1;37m%}"
 
 # get battery charge
 battery_status () {
+    local bat_status bat_color
     bat_status=$(ioreg -n AppleSmartBattery -r | awk '$1~/Capacity/{c[$1]=$3} END{OFMT="%.2f"; max=c["\"DesignCapacity\""]; print (max>0? 100*c["\"CurrentCapacity\""]/max: "?")}')
-    bat_status=`echo "${bat_status}" | bc -l`
     # Set color depending on battery status
     if [[ ${bat_status} -gt 50.00 ]]; then
         bat_color="${GREEN}"
@@ -100,7 +100,7 @@ battery_status () {
     else
         bat_color="${RED}"
     fi
-    echo "${bat_color}${bat_status} %%${DEFAULT}"
+    print -f "%s%.2f %s" "${bat_color}" "${bat_status}" "%%${DEFAULT}"
 }
 
 # version control information
