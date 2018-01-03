@@ -68,39 +68,19 @@ autoload zmv
 # change prompt
 setopt prompt_subst
 
-BLACK="%{\e[0;30m%}"
-RED="%{\e[0;31m%}"
-GREEN="%{\e[0;32m%}"
-YELLOW="%{\e[0;33m%}"
-BLUE="%{\e[0;34m%}"
-PINK="%{\e[0;35m%}"
-CYAN="%{\e[0;36m%}"
-GRAY="%{\e[0;37m%}"
-
-DEFAULT="%{\e[0;0m%}"
-
-# Bold
-BRED="%{\e[1;31m%}"
-BGREEN="%{\e[1;32m%}"
-BYELLOW="%{\e[1;33m%}"
-BBLUE="%{\e[1;34m%}"
-BPINK="%{\e[1;35m%}"
-BCYAN="%{\e[1;36m%}"
-BGRAY="%{\e[1;37m%}"
-
 # get battery charge
 battery_status () {
     local bat_status bat_color
     bat_status=$(ioreg -n AppleSmartBattery -r | awk '$1~/Capacity/{c[$1]=$3} END{OFMT="%.2f"; max=c["\"DesignCapacity\""]; print (max>0? 100*c["\"CurrentCapacity\""]/max: "?")}')
     # Set color depending on battery status
     if [[ ${bat_status} -gt 50.00 ]]; then
-        bat_color="${GREEN}"
+        bat_color="%F{green}"
     elif [[ ${bat_status} -gt 25.00 ]]; then
-        bat_color="${YELLOW}"
+        bat_color="%F{yellow}"
     else
-        bat_color="${RED}"
+        bat_color="%F{red}"
     fi
-    print -f "%s%.2f %s" "${bat_color}" "${bat_status}" "%%${DEFAULT}"
+    print -f "%s%.2f %s" "%{${bat_color}%}" "${bat_status}" "%%%{%f%}"
 }
 
 # version control information
