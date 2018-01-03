@@ -88,45 +88,6 @@ BPINK="%{\e[1;35m%}"
 BCYAN="%{\e[1;36m%}"
 BGRAY="%{\e[1;37m%}"
 
-prt_git () {
-    # Check if inside a git repo
-    git branch > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        return 0
-    fi
-    # Capture the output of the "git status" -command.
-    git_status=`git status 2> /dev/null` 
-
-    # Set color based on clean/staged/dirty.
-    if [[ ${git_status} =~ "working directory clean" ]]; then
-        state="${GREEN}"
-    elif [[ ${git_status} =~ "Changes to be committed" ]]; then
-        state="${YELLOW}"
-    else
-        state="${RED}"
-    fi
-    # Set arrow icon based on status against remote.
-    remote_pattern="Your branch is (.*) of"
-    if [[ ${git_status} =~ ${remote_pattern} ]]; then
-        if [[ ${match[1]} == "ahead" ]]; then
-            remote="\xe2\x86\x91"
-        else
-            remote="\xe2\x86\x93"
-        fi
-    else
-        remote=""
-    fi
-    diverge_pattern="Your branch and (.*) have diverged"
-    if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-        remote="\xe2\x86\x95"
-    fi
-
-    # Get the name of the branch.
-    branch=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^..//'` 
-    # Set the final branch string.
-    echo "${state}(${branch})${remote}${DEFAULT}"
-}
-
 # get battery charge
 battery_status () {
     bat_status=$(ioreg -n AppleSmartBattery -r | awk '$1~/Capacity/{c[$1]=$3} END{OFMT="%.2f"; max=c["\"DesignCapacity\""]; print (max>0? 100*c["\"CurrentCapacity\""]/max: "?")}')
@@ -191,7 +152,6 @@ RPROMPT='`battery_status`'
 
 #change the command prompt to use colors and print the current directory
 ## with this the prompt isn't reprinted when the terminal size changes
-#precmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] `prt_git`'}
 precmd() {vcs_info}
 prmptcmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
 precmd_functions=(prmptcmd)
