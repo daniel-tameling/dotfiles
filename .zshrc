@@ -54,7 +54,7 @@ setopt correctall
 
 # command history 
 export HISTFILE=$HOME/.zsh_history
-export HISTSIZE=1000
+export HISTSIZE=50000
 export SAVEHIST=$HISTSIZE
 setopt histignorealldups sharehistory
 setopt hist_ignore_space
