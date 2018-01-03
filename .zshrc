@@ -192,8 +192,6 @@ RPROMPT='`battery_status`'
 #change the command prompt to use colors and print the current directory
 ## with this the prompt isn't reprinted when the terminal size changes
 #precmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] `prt_git`'}
-# precmd() {vcs_info; print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
-# PS1="%(!.#.$) "
 precmd() {vcs_info}
 prmptcmd() {print -P '%(?.:%).'${RED}':( %?'${DEFAULT}') ['${GREEN}'%n'${DEFAULT}'@'${PINK}'%m'${DEFAULT}':'${CYAN}'%~'${YELLOW}' %*'${DEFAULT}'] ${vcs_info_msg_0_}'}
 precmd_functions=(prmptcmd)
