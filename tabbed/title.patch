@@ -1,0 +1,38 @@
+--- tabbed.c.orig	2018-01-20 20:39:31.000000000 +0100
++++ tabbed.c	2018-01-20 20:41:30.000000000 +0100
+@@ -425,7 +425,8 @@
+ 
+ void
+ focus(int c) {
+-	char buf[BUFSIZ] = "tabbed-"VERSION" ::";
++	/* char buf[BUFSIZ] = "tabbed-"VERSION" ::"; */
++  char buf[BUFSIZ] = "tabbed";
+ 	size_t i, n;
+ 
+ 	/* If c, sel and clients are -1, raise tabbed-win itself */
+@@ -448,7 +449,13 @@
+ 	XSetInputFocus(dpy, clients[c]->win, RevertToParent, CurrentTime);
+ 	sendxembed(c, XEMBED_FOCUS_IN, XEMBED_FOCUS_CURRENT, 0, 0);
+ 	sendxembed(c, XEMBED_WINDOW_ACTIVATE, 0, 0, 0);
+-	xsettitle(win, clients[c]->name);
++	/* xsettitle(win, clients[c]->name); */
++  n = strlen(buf);
++  if (nclients == 1)
++    snprintf(&buf[n], sizeof(buf) - n, " with %d tab %s", nclients, *cmd);
++  else
++    snprintf(&buf[n], sizeof(buf) - n, " with %d tabs %s", nclients, *cmd);
++  xsettitle(win, buf);
+ 
+ 	/* If sel is already c, change nothing. */
+ 	if(sel != c) {
+@@ -1147,8 +1154,8 @@
+ 		gettextprop(clients[c]->win, XA_WM_NAME,
+ 				clients[c]->name, sizeof(clients[c]->name));
+ 	}
+-	if(sel == c)
+-		xsettitle(win, clients[c]->name);
++	/* if(sel == c) */
++	/* 	xsettitle(win, clients[c]->name); */
+ 	drawbar();
+ }
+ 
