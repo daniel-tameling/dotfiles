@@ -10,24 +10,21 @@
 ;; set path to maildir
 (setq mu4e-maildir "~/myMail/gmail")
 
-(setq mu4e-drafts-folder "/[Gmail]/.Drafts")
-(setq mu4e-sent-folder   "/[Gmail]/.Sent Mail")
-(setq mu4e-trash-folder  "/[Gmail]/.Trash")
+(setq mu4e-drafts-folder "/[Gmail]/Drafts")
+(setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+(setq mu4e-trash-folder  "/[Gmail]/Trash")
 
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
 
 ;; setup some handy shortcuts
 ;; you can quickly switch to your Inbox -- press ``ji''
-;; then, when you want archive some messages, move them to
-;; the 'All Mail' folder by pressing ``ma''.
 
 (setq mu4e-maildir-shortcuts
-      '( ("/INBOX"                . ?i)
-         ("/[Gmail]/.Sent Mail"   . ?s)
-         ("/[Gmail]/.Trash"       . ?t)
-         ("/[Gmail]/.Drafts"      . ?d)
-         ("/[Gmail]/.All Mail"    . ?a)))
+      '( ("/INBOX"               . ?i)
+         ("/[Gmail]/Sent Mail"   . ?s)
+         ("/[Gmail]/Trash"       . ?t)
+         ("/[Gmail]/Drafts"      . ?d)))
 
 ;; taken from mu4e page to define bookmarks
 (add-to-list 'mu4e-bookmarks
