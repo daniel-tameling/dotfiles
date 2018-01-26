@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strings"
 	"bytes"
-	// "os"
+	"os"
 	"os/exec"
+	"flag"
 )
 
 func main() {
@@ -16,12 +17,34 @@ func main() {
 		err     error
 		remote, branch, prefix, postfix  string
 		color, green, yellow, red, turnoff string
+		helpPtr *bool
+		promptPtr *string
 	)
-	green = "\033[0;32m"
-	yellow = "\033[0;33m"
-	red = "\033[0;31m"
-	turnoff = "\033[0;0m"
+	helpPtr = flag.Bool("help", false, "Print this help and exit")
+	promptPtr = flag.String("prompt", "", "format colors so `[bash,zsh]` prompts know they have zero width")
+	flag.Parse()
 
+	if *helpPtr {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+	if *promptPtr == "zsh" {
+		green = "%{%F{green}%}"
+		yellow = "%{%F{yellow}%}"
+		red = "%{%F{red}%}"
+		turnoff = "%{%f%}"
+	} else if *promptPtr == "bash" {
+		green = "\\[\033[0;32m\\]"
+		yellow = "\\[\033[0;33m\\]"
+		red = "\\[\033[0;31m\\]"
+		turnoff = "\\[\033[0;0m\\]"
+	} else{
+		green = "\033[0;32m"
+		yellow = "\033[0;33m"
+		red = "\033[0;31m"
+		turnoff = "\033[0;0m"
+	}
 	// git_info, err = exec.Command(cmdName, cmdArgs...).Output()
 	// if err != nil {
 	// 	fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
