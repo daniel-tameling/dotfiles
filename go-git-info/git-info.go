@@ -54,7 +54,7 @@ func main() {
 			prefix = "EMPTY:"
 		}
 		if is_bare == "true" {
-			prefix = prefix + "BARE:"
+			prefix += "BARE:"
 		}
 		git_remote.Wait()
 		remote = ""
@@ -66,7 +66,7 @@ func main() {
 				remote = "+" + forward
 			}
 			if behind != "0\n" {
-				remote = remote + "-" + behind
+				remote += "-" + behind
 			}
 			if remote != "" {
 				remote = remote + " "
@@ -77,7 +77,10 @@ func main() {
 		} else {
 			branch = short_sha
 		}
-		postfix = " "
+		postfix = ""
+		if err = git_stash.Wait(); err == nil {
+			postfix = "S"
+		}
 		color = green
 		if inside_work_tree == "true" {
 			if err = git_dirty_cached.Wait(); err != nil {
@@ -88,13 +91,13 @@ func main() {
 				}
 			}
 			if err = git_untracked.Wait(); err == nil {
-				postfix = " U"
+				postfix += "U"
 			}
 		}
-		if err = git_stash.Wait(); err == nil {
-			postfix = postfix + "S"
+		if postfix != "" {
+			postfix += " "
 		}
-		output := strings.Replace(" " + color + prefix + branch + turnoff + postfix + " " + remote, "\n", "", -1)
+		output := strings.Replace(color + prefix + branch + turnoff + " " + postfix + remote, "\n", "", -1)
 		fmt.Println(output)
 		var _ = git_dir
 	}
