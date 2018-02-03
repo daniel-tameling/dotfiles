@@ -9,6 +9,7 @@ gnuplot                        @5.2.0_0+aquaterm+luaterm+pangocairo+wxwidgets+x1
 go                             @1.9.2_0 
 ImageMagick                    @6.9.7-10_0+x11 
 isync                          @1.3.0_0 
+lua                            @5.3.4_1 
 msmtp                          @1.6.6_2 
 mu                             @0.9.18_0+emacs 
 openmpi-default                @3.0.0_0+gcc6 
