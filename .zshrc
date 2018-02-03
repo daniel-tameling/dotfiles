@@ -35,11 +35,11 @@ if [ -n "$PS1" ] ; then
   rm ()
   {
       ls -FCsd "$@"
-      echo 'remove[ny]? ' | tr -d '\012' ; read
+      print -n 'remove[ny]? ' ; read
       if [ "_$REPLY" = "_y" ]; then
           /bin/rm -rf "$@"
       else
-          echo '(cancelled)'
+          print '(cancelled)'
       fi
   }
 fi
