@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; set path to spell checking
 (setq-default ispell-program-name "/opt/local/bin/aspell")
 ;; enable spell checking automatically in tex files

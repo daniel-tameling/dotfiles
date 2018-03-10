@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; change emacs indentation style
 (setq c-default-style "linux"
       c-basic-offset 2)

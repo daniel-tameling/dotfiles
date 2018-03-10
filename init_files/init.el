@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; load color theme
 ; (load-theme 'manoj-dark t)
 (load-theme 'tango t)

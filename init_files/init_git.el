@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; garbage collection treshold to 20 MB during initialization
 (setq default-gc-cons-threshold gc-cons-threshold)
 (setq gc-cons-threshold 20000000)

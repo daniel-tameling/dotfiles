@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; add the source shipped with mu to load-path
 (add-to-list 'load-path (expand-file-name "/opt/local/share/emacs/site-lisp/mu4e"))
 

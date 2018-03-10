@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; spell-check
 (add-hook 'LaTeX-mode-hook 'flyspell-mode) ; enable spell checking 
 ;(add-hook 'LaTeX-mode-hook 'flyspell-buffer) ; check tex file upon opening

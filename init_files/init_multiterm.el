@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; use zsh for multi-term
 (setq multi-term-program "/bin/zsh")
 ;; cycle through terminals with M-[ and M-]

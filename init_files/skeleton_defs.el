@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; function for inserting a for-statement
 (define-skeleton my-for-statement
   "Insert a for () {...} skeleton."
