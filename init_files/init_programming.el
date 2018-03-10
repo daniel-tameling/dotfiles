@@ -10,11 +10,12 @@
 (defvaralias 'cperl-indent-level 'tab-width)
 
 ;; highlight FIXME, TODO ... in C like programs
-(add-hook 'c-mode-common-hook
-(lambda()
-(font-lock-add-keywords nil 
-'(("\\<\\(FIXME\\|TODO\\|XXX+\\|BUG\\)" 
-1 font-lock-warning-face prepend))))) 
+(add-hook 'c-mode-common-hook 'set-my-highlighted-keywords)
+(defun set-my-highlighted-keywords ()
+  "highlight FIXME, TODO etc."
+  (font-lock-add-keywords nil 
+  '(("\\<\\(FIXME\\|TODO\\|XXX+\\|BUG\\)" 
+     1 font-lock-warning-face prepend))))
 ;(set-face-underline 'font-lock-warning-face t)
 (set-face-background 'font-lock-warning-face "blue4")
 (set-face-foreground 'font-lock-warning-face "slate gray")
