@@ -6,6 +6,14 @@
 ;; auto-fill-mode for latex mode
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 
+;; confirm quitting
+(add-hook 'LaTeX-mode-hook 'my-confirm-kill-in-latex-mode)
+(defun my-confirm-kill-in-latex-mode ()
+  "ask for confirmation for closing emacs as C-c C-v is close to C-x C-c"
+  ;; so it's only in the tex buffer not globally
+  (make-local-variable 'confirm-kill-emacs)
+  (setq confirm-kill-emacs 'y-or-n-p))
+
 ;; use pdf in tex mode
 (setq TeX-PDF-mode t)
 
@@ -16,6 +24,7 @@
 
 (setq TeX-source-correlate-method 'synctex)
 (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+(setq LaTeX-command "latex -synctex=1")
 ;(server-start)
 
 ;; set path so that auctex finds tex and ghostscript
@@ -54,6 +63,7 @@ LaTeX-section-label))
 (setq reftex-label-alist
       '(("equation" 101 "eq:" "~\\ref{%s}" t (regexp "equations?" "eqs?\\." "eqn\\." "Gleichung\\(en\\)?" "Gl\\."))
         ))
+(setq reftex-ref-style-default-list (quote ("Default" "Hyperref")))
 
 ;; add latex syntax highlighting for autoref reference
 (setq font-latex-match-reference-keywords

@@ -16,15 +16,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(LaTeX-command "latex -synctex=1")
  '(org-agenda-files (quote ("~/dailytodo/todo.org")))
  '(package-selected-packages
    (quote
     (helm go-mode sr-speedbar multi-term lua-mode iedit git-commit auctex 2048-game)))
- '(reftex-ref-style-default-list (quote ("Default" "Hyperref")))
-; '(send-mail-function (quote mailclient-send-it))
- '(sentence-end-double-space nil)
- '(show-paren-mode t))
+ )
 
 ;; additional repositories for emacs packages
 (require 'package)
