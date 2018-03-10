@@ -24,6 +24,10 @@
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
 ;; semantic
-(semantic-mode 1)
-(global-semantic-idle-scheduler-mode 1)
-(global-semantic-idle-completions-mode 1)
+(add-hook 'c-mode-common-hook 'my-activate-semantic)
+(add-hook 'python-mode-hook 'my-activate-semantic)
+(defun my-activate-semantic ()
+  "activate semantic for completion"
+  (semantic-mode 1)
+  (global-semantic-idle-scheduler-mode 1)
+  (global-semantic-idle-completions-mode 1))
