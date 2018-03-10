@@ -16,7 +16,7 @@
  '(org-agenda-files (quote ("~/dailytodo/todo.org")))
  '(package-selected-packages
    (quote
-    (sr-speedbar multi-term lua-mode iedit git-commit auctex 2048-game)))
+    (helm go-mode sr-speedbar multi-term lua-mode iedit git-commit auctex 2048-game)))
  '(reftex-ref-style-default-list (quote ("Default" "Hyperref")))
 ; '(send-mail-function (quote mailclient-send-it))
  '(sentence-end-double-space nil)
