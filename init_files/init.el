@@ -3,6 +3,15 @@
 ; (load-theme 'manoj-dark t)
 (load-theme 'tango t)
 
+;; insert matching closing parenthesis automatically
+(electric-pair-mode t)
+
+;; highlight matching parenthesis
+(show-paren-mode t)
+
+;; recognize one space after . as sentence end
+(setq sentence-end-double-space nil)
+
 ;; don't show buffer list when opening more than 2 files
 (setq inhibit-startup-buffer-menu t)
 
