@@ -1,11 +1,15 @@
+;; -*- lexical-binding: t -*-
 ;; garbage collection treshold to 20 MB during initialization
 (setq default-gc-cons-threshold gc-cons-threshold)
 (setq gc-cons-threshold 20000000)
+(setq default-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
 ;; reset garbage collection to 800 kB
-(add-hook 'emacs-startup-hook 'my/restore-gc-threshold)
-(defun my/restore-gc-threshold ()
+(add-hook 'emacs-startup-hook 'my-restore-default-gc-threshold)
+(defun my-restore-default-gc-threshold ()
   "Reset `gc-cons-threshold' to its default value."
-  (setq gc-cons-threshold default-gc-cons-threshold))
+  (setq gc-cons-threshold default-gc-cons-threshold)
+  (setq file-name-handler-alist default-file-name-handler-alist))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
