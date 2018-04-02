@@ -9,13 +9,40 @@ import (
 	"flag"
 )
 
+func rm_empty_and_join(s... string) string {
+	var idx int
+	// s[0] is branch and thus always non-empty
+	idx = 1
+	for i := 1; i < len(s); i++ {
+		if s[i] != "" {
+			s[idx] = s[i]
+			idx++
+		}
+	}
+	return strings.Join(s[:idx], " ")
+}
+
+// returns green, yellow, red, turnoff with shell escapes for corresponding prompts
+func getcolorcodes(prompt string) (string, string, string, string) {
+	if prompt == "zsh" {
+		return "%{%F{green}%}" , "%{%F{yellow}%}" , "%{%F{red}%}" , "%{%f%}" 
+	} else if prompt == "bash"{
+		return "\\[\033[0;32m\\]" , "\\[\033[0;33m\\]" , "\\[\033[0;31m\\]" , "\\[\033[0;0m\\]"
+	} else {
+		return "\033[0;32m" , "\033[0;33m" , "\033[0;31m" , "\033[0;0m"
+
+	}
+}
+
 func main() {
 	var (
 		git_info  []byte
 		git_dirty_cached, git_dirty, git_branch, git_remote *exec.Cmd
 		git_untracked, git_stash *exec.Cmd
 		err     error
-		remote, branch, prefix, postfix  string
+		empty, bare, branch string
+		forward, behind string
+		stash, untracked string
 		color, green, yellow, red, turnoff string
 		helpPtr *bool
 		promptPtr *string
@@ -29,22 +56,9 @@ func main() {
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
-	if *promptPtr == "zsh" {
-		green = "%{%F{green}%}"
-		yellow = "%{%F{yellow}%}"
-		red = "%{%F{red}%}"
-		turnoff = "%{%f%}"
-	} else if *promptPtr == "bash" {
-		green = "\\[\033[0;32m\\]"
-		yellow = "\\[\033[0;33m\\]"
-		red = "\\[\033[0;31m\\]"
-		turnoff = "\\[\033[0;0m\\]"
-	} else{
-		green = "\033[0;32m"
-		yellow = "\033[0;33m"
-		red = "\033[0;31m"
-		turnoff = "\033[0;0m"
-	}
+
+	green, yellow, red, turnoff = getcolorcodes(*promptPtr)
+
 	// git_info, err = exec.Command(cmdName, cmdArgs...).Output()
 	// if err != nil {
 	// 	fmt.Fprintln(os.Stderr, "There was an error running git rev-parse command: ", err)
@@ -72,38 +86,39 @@ func main() {
 		git_branch = exec.Command("git", "symbolic-ref", "--short", "--quiet", "HEAD")
 		git_branch.Stdout = branch_ouput
 		git_branch.Start()
-		prefix = ""
 		if short_sha == "" {
-			prefix = "EMPTY:"
+			empty = "EMPTY:"
+		} else {
+			empty = ""
 		}
 		if is_bare == "true" {
-			prefix += "BARE:"
+			bare = "BARE:"
+		} else {
+			bare = ""
 		}
 		git_remote.Wait()
-		remote = ""
-		if remote_output.String() != ""{
+		forward = ""
+		behind = ""
+		if remote_output.String() != "" {
 			s := strings.Split(remote_output.String(), "\t")
-			forward := s[0]
-			behind  := s[1]
-			if forward != "0" {
-				remote = "+" + forward
+			if s[0] != "0" {
+				forward = "+" + s[0]
 			}
-			if behind != "0\n" {
-				remote += "-" + behind
-			}
-			if remote != "" {
-				remote = remote + " "
+			if s[1] != "0\n" {
+				behind = "-" + s[1]
 			}
 		}
 		if err = git_branch.Wait(); err == nil {
-			branch = branch_ouput.String()
+			branch = strings.Replace(branch_ouput.String(), "\n", "", -1)
 		} else {
 			branch = short_sha
 		}
-		postfix = ""
 		if err = git_stash.Wait(); err == nil {
-			postfix = "S"
+			stash = "S"
+		} else {
+			stash = ""
 		}
+		untracked = ""
 		color = green
 		if inside_work_tree == "true" {
 			if err = git_dirty_cached.Wait(); err != nil {
@@ -114,14 +129,10 @@ func main() {
 				}
 			}
 			if err = git_untracked.Wait(); err == nil {
-				postfix += "U"
+				untracked = "U"
 			}
 		}
-		if postfix != "" {
-			postfix += " "
-		}
-		output := strings.Replace(color + prefix + branch + turnoff + " " + postfix + remote, "\n", "", -1)
-		fmt.Println(output)
+		fmt.Println(rm_empty_and_join(color + empty + bare + branch + turnoff, stash + untracked, forward + behind))
 		var _ = git_dir
 	}
 }
