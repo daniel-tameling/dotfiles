@@ -34,7 +34,7 @@ if [ "$TERM" != "dumb" ]; then
 fi
 
 # Useful aliases
-alias ls='ls $LS_OPTIONS -hF'
+alias ls='ls $LS_OPTIONS -h'
 alias ll='ls -l' 
 alias la='ls -la'
 alias l.='ls -d .*'
