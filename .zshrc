@@ -41,12 +41,17 @@ alias l.='ls -d .*'
 alias lt='ls -ltr'
 alias lld='ls -ld *(/)'
 
-#always prompt befor overwriting on cp or mv & nocorrection for commands 
+# always prompt before overwriting on cp or mv & nocorrection for commands 
 alias cp='nocorrect cp -i'
 alias mv='nocorrect mv -i'
 alias mkdir='nocorrect mkdir'
-alias rm='rm -v' #prompt before removal & do not remove root & explain what is deleted
 alias emacs='emacs -nw' #emacs not in x11 window
+alias mu4e='emacs -f mu4e'
+alias tst="tabbed -r 2 -c -p -1 st -w ''"
+
+woman () {
+    emacs -eval "(woman \"$1\")"
+}
 
 if [ -n "$PS1" ] ; then
   rm ()
@@ -69,7 +74,7 @@ alias fgrep='fgrep --color=auto'
 # autocorrection
 setopt correctall
 
-# command history 
+# command history
 export HISTFILE=$HOME/.zsh_history
 export HISTSIZE=50000
 export SAVEHIST=$HISTSIZE
