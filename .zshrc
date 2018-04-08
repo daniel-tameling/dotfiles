@@ -240,4 +240,6 @@ if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
    # for st
    bindkey '5D' emacs-backward-word
    bindkey '5C' emacs-forward-word
+   bindkey '3D' emacs-backward-word
+   bindkey '3C' emacs-forward-word
 fi
