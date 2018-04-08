@@ -90,6 +90,12 @@ autoload zmv
 # change prompt
 setopt prompt_subst
 
+# put directories on directory stack
+setopt auto_pushd pushd_ignore_dups
+
+# extended globbing
+setopt extended_glob
+
 # get battery charge
 battery_status () {
     local bat_status bat_color
