@@ -36,6 +36,10 @@ if [ "$TERM" != "dumb" ]; then
     export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=01;34:ln=01;34:bn=01;34:se=37'
 fi
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
 # Useful aliases
 alias ls='ls $LS_OPTIONS -h'
 alias ll='ls -l' 
