@@ -11,6 +11,9 @@
 #export CLICOLOR=1
 #export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
+if [[ -z "$PS1" || "$TERM" == "dumb" ]]; then
+    return
+fi
 if [ "$TERM" != "dumb" ]; then
     export LS_OPTIONS='--color=auto'
     eval `dircolors ~/.dir_colors`
