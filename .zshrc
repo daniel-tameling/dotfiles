@@ -263,3 +263,15 @@ if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
    bindkey '3D' emacs-backward-word
    bindkey '3C' emacs-forward-word
 fi
+
+function plumber() {
+    if [[ -f $@ ]]; then
+        emacs "$@"
+    elif [[ -d $@ ]]; then
+        cd "$@"
+    elif [[ $@ == www* ]]; then
+         open "http://$@"
+    elif [[ $@ == http* ]]; then
+         open "$@"
+    fi    
+}
