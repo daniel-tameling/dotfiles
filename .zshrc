@@ -100,6 +100,9 @@ setopt prompt_subst
 # put directories on directory stack
 setopt auto_pushd pushd_ignore_dups
 
+# if no matches are found, don't print zsh error
+setopt nomatch
+
 # extended globbing
 setopt extended_glob
 
