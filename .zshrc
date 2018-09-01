@@ -177,14 +177,15 @@ precmd() {err=$?; print -nP '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'`~/g
 precmd() {
     local err=$?
     local git_status=$(~/go-git-info/go-git-info)
-    print -nP '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'
+    local -a p
+    p+='%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'
     if [[ -n $git_status ]]; then
-        print -nP ' $git_status'
+        p+='$git_status'
     fi
     if [[ $err != 0 ]]; then
-        print -nP ' %F{red}[${err}]%f'
+        p+='%F{red}[${err}]%f'
     fi
-    print -n '\n'
+    print -P $p
 }
 PS1="%(!.#.$) "
 
