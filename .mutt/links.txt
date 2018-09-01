@@ -1,0 +1,4 @@
+http://www.strcat.de/dotfiles/mutt.color
+https://github.com/mrtyler/dotfiles/blob/master/mutt-colors
+http://terminalmage.net/2011/10/12/printing-to-pdf-in-mutt.html
+https://unix.stackexchange.com/questions/20456/pretty-print-mails-from-mutt

@@ -1,0 +1,173 @@
+bind index,pager j noop
+macro index ji "<change-folder> =INBOX<enter>" "goto INBOX"
+macro index jd "<change-folder> =[Gmail]/Drafts<enter>" "goto Drafts"
+macro index js "<change-folder> =[Gmail]/Sent<quote-char><space>Mail<enter>" "goto Sent Mail"
+macro index jt "<change-folder> =[Gmail]/Trash<enter>" "goto Trash"
+macro index,pager G "!mbsync -a^M" "Update through mbsync"
+# macro index,pager G '<sync-mailbox> y !mbsync -a^M'
+
+set move = no
+
+set sendmail="/opt/local/bin/msmtp --read-envelope-from" # choose the SMTP server according to the from field
+set edit_hdrs=yes
+set signature=~/.mutt/signature
+set user_agent=no # don't include user-agent info in outgoing messages
+set from = "johndoe@gmail.com"
+set realname = "Daniel Tameling"
+set editor="emacs -Q -l ~/.emacs.d/init_files/init_mutt.el +8"
+
+set alias_file=~/.mutt/alias
+set sort_alias=address
+set reverse_alias="yes"
+source $alias_file
+
+# set index_format="%4C %3M %Z %{%a %d/%m/%Y} %-15.15L %?l?%4l&%4c? [%X] %s"
+
+# ## from arch wiki
+# ## From field gets 35% of remaining space, Subject gets 65%.
+# ## Remaining space is the total width minus the other fields (24), minus the sidebar (19)
+# set my_index_format='set my_col_addr = `echo $((35 * ($(tput cols)-24-19) / 100))`; set my_col_subject = `echo $((65 * ($(tput cols)-24-19) / 100))`; set index_format="%4C %Z %{%a %d/%m/%Y} %-${my_col_addr}.${my_col_addr}L %?M?<%M> ?%-${my_col_subject}.${my_col_subject}s%> %c [%X] "'
+
+# folder-hook .* "$my_index_format"
+# macro index,pager jf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
+
+# set my_index_format='set my_col_addr = `echo $((35 * ($(tput cols)-24-19) / 100))`; set my_col_subject = `echo $((65 * ($(tput cols)-24-19) / 100))`; set index_format="muttindexformat %4C %Z %{%a %d/%m/%Y %R} %-${my_col_addr}.${my_col_addr}L %?M?<%M> ?%-${my_col_subject}.${my_col_subject}s%> %c [%X] |"'
+set my_today=`date +%d/%m/%Y`
+set my_yesterday=`date --date yesterday +%d/%m/%Y`;
+set my_index_format='set my_index_space = `echo $(($(tput cols)-44))`; set index_format="muttindexformat ${my_index_space} %4C %Z %{%a-%d/%m/%Y-%R} %-50.50F %-50.50L %M %-90.90s%> %c [%X] ${my_today} ${my_yesterday}|"'
+
+folder-hook .* "$my_index_format"
+macro index,pager jf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
+
+subscribe .*@zsh.org .*@suckless.org lmod-users@lists.sourceforge.net isync-devel@lists.sourceforge.net
+alternates johndoe@gmail.com
+
+# mu for searching
+macro index k "<shell-escape>mu index --rebuild --maildir=~/myMail/gmail" "rebuild mu index"
+macro index z "<shell-escape>mu find --clearlinks --format=links --linksdir=~/.mutt/mu-find-results " "mu find"
+macro index Z "<change-folder-readonly>~/.mutt/mu-find-results" "mu find results"
+
+bind index,pager t noop
+bind index,pager td delete-thread
+bind index,pager tu undelete-thread
+bind index,pager tr read-thread
+bind index,pager tp previous-thread
+bind index,pager tn next-thread
+bind index       tt tag-thread
+bind index,pager tf root-message
+bind index,pager tb parent-message
+bind generic,editor,index,pager , search-opposite
+bind generic,editor,index,pager . search-next
+bind generic,editor,index < top-page
+bind generic,editor,index > bottom-page
+
+set send_charset="utf-8"
+
+set folder = "~/myMail/gmail"
+set spoolfile = "+/INBOX"
+set postponed = "+/[Gmail]/Drafts"
+set trash = "+/[Gmail]/Trash"
+set copy="no"
+
+# Tell mutt to use the Maildir format
+set mbox_type          = Maildir
+
+set sort="reverse-threads"
+set strict_threads="yes"
+
+set sort_browser="reverse-date"
+set sort_aux="last-date-received"
+set hide_thread_subject="no"
+set collapse_all="yes"
+unset collapse_unread
+
+# set maildir_trash="yes"
+
+bind index - collapse-thread
+bind index <Tab> collapse-thread
+bind index _ collapse-all
+
+set meta_key=yes
+bind index,pager \cv next-page
+bind index,pager \ev previous-page
+bind index,pager x sync-mailbox
+bind index,pager A sync-folder-mailbox
+
+# color hdrdefault white black  # headers white on black
+# color header brightgreen black ^From:  # sender's name in green
+# color quoted cyan black  # quoted text in blue
+# color signature red black   # signature in red
+
+set mark_old=no
+set sleep_time=0
+# set date_format = "%d.%m.%y"
+set recall=no
+
+ignore *
+unignore date subject from to cc bcc reply-to
+
+unhdr_order *
+hdr_order From: To: Cc: Date: Subject:
+
+set pager_context=4
+set pager_index_lines=8
+bind pager <up> previous-line
+bind pager <down> next-line
+bind pager <left> previous-page
+bind pager <right> next-page
+# bind pager "\e[1;3A" previous-entry
+# bind pager "\e[1;3B" next-entry
+bind index <up> previous-entry
+bind index <down> next-entry
+bind index,pager [ previous-entry
+bind index,pager ] next-entry
+bind index,pager p previous-entry
+bind index,pager n next-entry
+bind index,pager { previous-unread
+bind index,pager } next-unread
+bind index,pager R group-reply
+bind index,pager L list-reply
+
+set pager_stop="yes"
+unset markers
+
+# View HTML mails properly, but always view the plain text if it's available
+auto_view text/html
+alternative_order text/plain text/enriched text/html
+set mailcap_path = ~/.mutt/mailcap
+
+set tmpdir           = ~/.mutt/tmp          # where to keep temp files
+set print_command="~/.mutt/print-pdf-wrapper.sh"
+
+set sidebar_visible = "yes"
+set sidebar_width = 19
+mailboxes "+INBOX" \
+          "+/[Gmail]/Sent Mail" \
+          "+/[Gmail]/Trash" \
+          "+/[Gmail]/Drafts"
+
+# Should the mailbox paths be abbreviated?
+set sidebar_short_path = "yes"
+# Number of top-level mailbox path subdirectories to truncate for display
+set sidebar_component_depth = 0
+# When abbreviating mailbox path names, use any of these characters as path
+# separators.  Only the part after the last separators will be shown.
+# For file folders '/' is good.  For IMAP folders, often '.' is useful.
+set sidebar_delim_chars = '/.'
+set sidebar_divider_char = '|'
+set mail_check_stats
+set sidebar_format = '%B%?F? [%F]?%* %?N?%N/?%S '
+# Sort the mailboxes in the Sidebar using this method:
+#       count    - total number of messages
+#       flagged  - number of flagged messages
+#       new      - number of new messages
+#       path     - mailbox path
+#       unsorted - do not sort the mailboxes
+set sidebar_sort_method = 'unsorted'
+
+# bind index,pager \Cp sidebar-prev
+bind index,pager \Cn sidebar-next
+bind index,pager o sidebar-open
+bind index,pager B sidebar-toggle-visible
+
+source ~/.mutt/colors
