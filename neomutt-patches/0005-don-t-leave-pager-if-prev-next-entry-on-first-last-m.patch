@@ -1,0 +1,48 @@
+From f0d1d4f3ced2475aa4bb5d4adde64cd8b32b18d6 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Mon, 21 May 2018 16:53:31 +0200
+Subject: [PATCH 5/5] don't leave pager if prev/next-entry on first/last
+ message
+
+other operations also need fixing. would be better if leaving index
+before looking at operations would be fixed instead of fixing every
+single operation.
+---
+ curs_main.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/curs_main.c b/curs_main.c
+index 1e44ab617..9cceec430 100644
+--- a/curs_main.c
++++ b/curs_main.c
+@@ -2453,7 +2453,12 @@ int mutt_index_menu(void)
+         if (menu->current >= Context->vcount - 1)
+         {
+           if (menu->menu == MENU_MAIN)
+-            mutt_error(_("You are on the last message"));
++            mutt_error(_("You are on the last message."));
++          else if (menu->menu == MENU_PAGER)
++          {
++            op = OP_DISPLAY_MESSAGE;
++            continue;
++          }
+           break;
+         }
+         menu->current++;
+@@ -2498,7 +2503,12 @@ int mutt_index_menu(void)
+         if (menu->current < 1)
+         {
+           if (menu->menu == MENU_MAIN)
+-            mutt_error(_("You are on the first message"));
++            mutt_error(_("You are on the first message."));
++          else if (menu->menu == MENU_PAGER)
++          {
++            op = OP_DISPLAY_MESSAGE;
++            continue;
++          }
+           break;
+         }
+         menu->current--;
+-- 
+2.15.2 (Apple Git-101.1)
+
