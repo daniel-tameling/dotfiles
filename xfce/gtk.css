@@ -1,0 +1,164 @@
+/***************
+ * Base States *
+ ***************/
+.background {
+  color: #424242;
+  background-color: #f3f3f3;
+}
+
+.background:backdrop {
+  color: #424242;
+  background-color: #f3f3f3;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+}
+
+.view, iconview,
+.view text,
+iconview text,
+textview text {
+  color: #424242;
+  background-color: #f3f3f3;
+}
+
+.view:backdrop, iconview:backdrop,
+.view text:backdrop,
+iconview text:backdrop,
+textview text:backdrop {
+  color: #424242;
+  background-color: #f3f3f3;
+}
+
+.view:backdrop:disabled, iconview:backdrop:disabled,
+.view text:backdrop:disabled,
+iconview text:backdrop:disabled,
+textview text:backdrop:disabled {
+  color: #c2cdc6;
+  background-color: #f3f3f3;
+}
+
+.view:disabled, iconview:disabled,
+.view text:disabled,
+iconview text:disabled,
+textview text:disabled {
+  color: #c2cdc6;
+  background-color: #f3f3f3;
+}
+
+.view:selected:focus, iconview:selected:focus, .view:selected, iconview:selected,
+.view text:selected:focus,
+iconview text:selected:focus,
+textview text:selected:focus,
+.view text:selected,
+iconview text:selected,
+textview text:selected {
+  border-radius: 3px;
+}
+
+/************
+ * Tooltips *
+ ************/
+tooltip {
+  padding: 4px;
+  /* not working */
+  border-radius: 5px;
+  box-shadow: none;
+  text-shadow: 0 1px black;
+}
+
+tooltip.background {
+  background-color: rgba(76, 85, 94, 0.95);
+  background-clip: padding-box;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+tooltip decoration {
+  background-color: transparent;
+}
+
+tooltip * {
+  padding: 4px;
+  background-color: transparent;
+  color: #cee2f2;
+}
+
+/**********************
+ * Window Decorations *
+ *********************/
+
+.view:selected:focus, .view:selected, iconview:selected, .view text:selected, iconview text:selected,
+textview text:selected, .view text selection:focus, iconview text selection:focus, .view text selection, iconview text selection,
+textview text selection:focus,
+textview text selection, flowbox flowboxchild:selected, spinbutton:not(.vertical) selection,
+entry selection, modelbutton.flat:selected,
+.menuitem.button.flat:selected, treeview.view:selected:focus, treeview.view:selected, row:selected, calendar:selected {
+  background-color: #525c66;
+}
+
+row:selected label, label:selected, .selection-mode button.titlebutton, .view:selected:focus, .view:selected, iconview:selected, .view text:selected, iconview text:selected,
+textview text:selected, .view text selection:focus, iconview text selection:focus, .view text selection, iconview text selection,
+textview text selection:focus,
+textview text selection, flowbox flowboxchild:selected, spinbutton:not(.vertical) selection,
+entry selection, modelbutton.flat:selected,
+.menuitem.button.flat:selected, treeview.view:selected:focus, treeview.view:selected, row:selected, calendar:selected {
+  color: #dde3e9;
+}
+
+row:selected label:disabled, label:disabled:selected, .selection-mode button.titlebutton:disabled, iconview:disabled:selected:focus, .view:disabled:selected, iconview:disabled:selected, iconview text:disabled:selected:focus,
+textview text:disabled:selected:focus, .view text:disabled:selected, iconview text:disabled:selected,
+textview text:disabled:selected, iconview text selection:disabled:focus, .view text selection:disabled, iconview text selection:disabled,
+textview text selection:disabled, flowbox flowboxchild:disabled:selected, label:disabled selection, spinbutton:not(.vertical) selection:disabled,
+entry selection:disabled, modelbutton.flat:disabled:selected,
+.menuitem.button.flat:disabled:selected, row:disabled:selected, calendar:disabled:selected {
+  color: #efefef;
+}
+
+row:selected label:backdrop, label:backdrop:selected, .selection-mode button.titlebutton:backdrop, iconview:backdrop:selected:focus, .view:backdrop:selected, iconview:backdrop:selected, iconview text:backdrop:selected:focus,
+textview text:backdrop:selected:focus, .view text:backdrop:selected, iconview text:backdrop:selected,
+textview text:backdrop:selected, iconview text selection:backdrop:focus, .view text selection:backdrop, iconview text selection:backdrop,
+textview text selection:backdrop, flowbox flowboxchild:backdrop:selected, label:backdrop selection, spinbutton:not(.vertical) selection:backdrop,
+entry selection:backdrop, modelbutton.flat:backdrop:selected,
+.menuitem.button.flat:backdrop:selected, row:backdrop:selected, calendar:backdrop:selected {
+  color: #dde3e9;
+}
+
+row:selected label:backdrop:disabled, label:backdrop:disabled:selected, .selection-mode button.titlebutton:backdrop:disabled, .view:backdrop:disabled:selected, iconview:backdrop:disabled:selected, .view text:backdrop:disabled:selected, iconview text:backdrop:disabled:selected,
+textview text:backdrop:disabled:selected, .view text selection:backdrop:disabled, iconview text selection:backdrop:disabled,
+textview text selection:backdrop:disabled, flowbox flowboxchild:backdrop:disabled:selected, label:disabled selection:backdrop, label:backdrop selection:disabled, spinbutton:not(.vertical) selection:backdrop:disabled,
+entry selection:backdrop:disabled, modelbutton.flat:backdrop:disabled:selected,
+.menuitem.button.flat:backdrop:disabled:selected, row:backdrop:disabled:selected, calendar:backdrop:disabled:selected {
+  color: #efefef;
+}
+
+
+.xfce4-panel.panel {
+  color: #393939;
+  background-color: #99adbf;
+  border-color: #99adbf;
+  border: none;
+  -gtk-icon-shadow: none;
+  -gtk-icon-effect: none; 
+}
+
+.xfce4-panel.panel :hover, .xfce4-panel.button:hover {
+  color: #c2cdd6;
+  background-color: #525c66;
+  border-color: #000000;
+  box-shadow: none;
+  /* border: none; */
+  background-image: none;
+  -gtk-icon-shadow: none;
+  -gtk-icon-effect: none; 
+  transition: none;
+}
+
+.xfce4-panel.panel :active, .xfce4-panel.button:active, .xfce4-panel.panel :focus, .xfce4-panel.button:focus, .xfce4-panel.panel :checked, .xfce4-panel.button:checked {
+  color: #333333;
+  background-color: #7a8b99;
+  border-color: #000000;
+  box-shadow: none;
+  background-image: none;
+  -gtk-icon-shadow: none;
+  -gtk-icon-effect: none; 
+  transition: none;
+}
