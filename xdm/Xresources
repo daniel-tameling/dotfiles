@@ -1,0 +1,53 @@
+xlogin*login.translations: #override \
+        Ctrl<Key>R: abort-display()\n\
+        <Key>F1: set-session-argument(failsafe) finish-field()\n\
+        <Key>Delete: delete-character()\n\
+        <Key>Left: move-backward-character()\n\
+        <Key>Right: move-forward-character()\n\
+        <Key>Home: move-to-begining()\n\
+        <Key>End: move-to-end()\n\
+        Ctrl<Key>KP_Enter: set-session-argument(failsafe) finish-field()\n\
+        <Key>KP_Enter: set-session-argument() finish-field()\n\
+        Ctrl<Key>Return: set-session-argument(failsafe) finish-field()\n\
+        <Key>Return: set-session-argument() finish-field()
+Xcursor.theme: whiteglass
+xlogin.Login.namePrompt:         \040\040\040\040\040\040\040Login:
+xlogin.Login.passwdPrompt:       Password:
+xlogin.Login.echoPasswd:         true
+xlogin.Login.greeting:           Welcome
+xlogin.Login.background:         gray40
+xlogin.Login.foreground:         gray80
+xlogin.Login.failColor:          gray80
+xlogin.Login.inpColor:           gray40
+xlogin.Login.promptColor:        gray80
+xlogin.Login.greetColor:         gray80
+#if WIDTH > 600
+xlogin*greetFont: -adobe-helvetica-bold-r-normal--24-240-75-75-p-138-iso8859-1
+xlogin*font: -adobe-helvetica-bold-r-normal--18-180-75-75-p-98-iso8859-1
+xlogin*promptFont: -adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1
+xlogin*failFont: -adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1
+xlogin*greetFace:       Helvetica-24:bold
+xlogin*face:            Serif-18:bold
+xlogin*promptFace:      Serif-18:bold
+xlogin*failFace:        Serif-18:bold
+XClock*face:            Helvetica-14:bold
+#else
+xlogin*greetFont: -adobe-helvetica-bold-r-normal--17-120-100-100-p-92-iso8859-1
+xlogin*font: -adobe-helvetica-bold-r-normal--12-120-75-75-p-67-iso8859-1
+xlogin*promptFont: -adobe-helvetica-bold-r-normal--12-120-75-75-p-70-iso8859-1
+xlogin*failFont: -adobe-helvetica-bold-r-normal--14-140-75-75-p-82-iso8859-1
+xlogin*greetFace:       Helvetica-18:bold
+xlogin*face:            Serif-12:bold
+xlogin*promptFace:      Serif-12:bold
+xlogin*failFace:        Serif-14:bold
+XClock*face:            Helvetica-12:bold
+#endif
+XClock*analog: false
+XClock*strftime: %a %e.%m.%Y %T
+XClock*interval: 1
+XClock*margin: 0
+XClock*frameWidth: 0
+XClock*borderWidth: 0
+XClock*innerFramesWidth: 0
+XClock*foreground: gray80
+XClock*background: grey20
