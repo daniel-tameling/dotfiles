@@ -1,0 +1,170 @@
+From ce13730edd280e4cedeb74a7fa8619d37ac2714a Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Sat, 2 Feb 2019 17:13:49 +0100
+Subject: [PATCH 8/8] adds a counter when using scrollback
+
+---
+ st.c | 18 ++++++++++++++++--
+ st.h |  2 ++
+ x.c  | 38 +++++++++++++++++++++++++++++++++-----
+ 3 files changed, 51 insertions(+), 7 deletions(-)
+
+diff --git a/st.c b/st.c
+index e515773..21bbf99 100644
+--- a/st.c
++++ b/st.c
+@@ -194,6 +194,7 @@ static int cmdfd;
+ static pid_t pid;
+ volatile sig_atomic_t doexit;
+ volatile _Atomic int shexitstat;
++unsigned int maxhistcounterdigits;
+ 
+ static uchar utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
+ static uchar utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
+@@ -817,9 +818,9 @@ void
+ ttywrite(const char *s, size_t n, int may_echo)
+ {
+ 	const char *next;
+-	Arg arg = (Arg) { .i = term.scr };
++	/* Arg arg = (Arg) { .i = term.scr }; */
+ 
+-	kscrolldown(&arg);
++	/* kscrolldown(&arg); */
+ 
+ 	if (may_echo && IS_SET(MODE_ECHO))
+ 		twrite(s, n, 1);
+@@ -1014,7 +1015,14 @@ treset(void)
+ void
+ tnew(int col, int row)
+ {
++        unsigned int i;
+ 	term = (Term){ .c = { .attr = { .fg = defaultfg, .bg = defaultbg } } };
++        i = HISTSIZE;
++        maxhistcounterdigits = 2;
++        while (i > 0) {
++                maxhistcounterdigits++;
++                i /= 10;
++        }
+ 	tresize(col, row);
+ 	treset();
+ }
+@@ -2605,6 +2613,8 @@ drawregion(int x1, int y1, int x2, int y2)
+ void
+ draw(void)
+ {
++        char str[maxhistcounterdigits+1];
++        int digits;
+ 	int cx = term.c.x;
+ 
+ 	if (!xstartdraw())
+@@ -2622,6 +2632,10 @@ draw(void)
+ 	if (term.scr == 0)
+ 		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
+ 				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
++        if (term.scr != 0) {
++                digits = snprintf(str, maxhistcounterdigits+1, "[%d]", term.scr);
++                xdrawhistcounter(str, digits, term.col - digits);
++        }
+ 	term.ocx = cx, term.ocy = term.c.y;
+ 	xfinishdraw();
+ }
+diff --git a/st.h b/st.h
+index c450dbf..8b31133 100644
+--- a/st.h
++++ b/st.h
+@@ -161,6 +161,8 @@ void *xmalloc(size_t);
+ void *xrealloc(void *, size_t);
+ char *xstrdup(char *);
+ 
++void xdrawhistcounter(const char*, int, int);
++
+ /* config.h globals */
+ extern char *utmp;
+ extern char *stty_args;
+diff --git a/x.c b/x.c
+index c695a82..04e9e97 100644
+--- a/x.c
++++ b/x.c
+@@ -402,6 +402,9 @@ mousereport(XEvent *e)
+ 			+ ((state & ControlMask) ? 16 : 0);
+ 	}
+ 
++        if (term.scr != 0 )
++                return;
++
+ 	if (IS_SET(MODE_MOUSESGR)) {
+ 		len = snprintf(buf, sizeof(buf), "\033[<%d;%d;%d%c",
+ 				button, x+1, y+1,
+@@ -489,6 +492,9 @@ selnotify(XEvent *e)
+ 	uchar *data, *last, *repl;
+ 	Atom type, incratom, property = None;
+ 
++        if (term.scr != 0 )
++                return;
++
+ 	incratom = XInternAtom(xw.dpy, "INCR", 0);
+ 
+ 	ofs = 0;
+@@ -686,11 +692,13 @@ brelease(XEvent *e)
+                                         _exit(127);
+                                 }
+                         } else {
+-                                cmd = xmalloc(strlen("plumber") + 1 + strlen(xsel.primary) + strlen("\r") + 1);
+-                                sprintf(cmd, "%s %s\r", "plumber", xsel.primary);
+-                                ttywrite("\x15", strlen("\x15"), 0);
+-                                ttywrite(cmd, strlen(cmd), 0);
+-                                free(cmd);
++                                if (term.scr == 0 ) {
++                                        cmd = xmalloc(strlen("plumber") + 1 + strlen(xsel.primary) + strlen("\r") + 1);
++                                        sprintf(cmd, "%s %s\r", "plumber", xsel.primary);
++                                        ttywrite("\x15", strlen("\x15"), 0);
++                                        ttywrite(cmd, strlen(cmd), 0);
++                                        free(cmd);
++                                }
+                         }
+                 }
+         }        
+@@ -1437,6 +1445,18 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
+ 	XftDrawSetClip(xw.draw, 0);
+ }
+ 
++void
++xdrawhistcounter(const char *str, int digits, int x)
++{
++        int i;
++        Glyph g = {' ', 0, histcountfg, histcountbg};
++        for (i = 0; i < strlen(str); i++) {
++                g.u = str[i];
++                xdrawglyph(g, x + i, 0);
++        }
++        return;
++}
++
+ void
+ xdrawglyph(Glyph g, int x, int y)
+ {
+@@ -1742,6 +1762,7 @@ kpress(XEvent *ev)
+ 	Status status;
+ 	Shortcut *bp;
+         Specialchar *sc;
++        Arg arg;
+ 
+ 	if (IS_SET(MODE_KBDLOCK))
+ 		return;
+@@ -1755,6 +1776,13 @@ kpress(XEvent *ev)
+ 		}
+ 	}
+ 
++        if (term.scr != 0 ) {
++                if (ksym == 'q') {
++                        arg = (Arg) { .i = term.scr };
++                        kscrolldown(&arg);
++                }
++                return;
++        }
+         /* 1.1 specialchars */
+ 	for (sc = specialchars; sc < specialchars + LEN(specialchars); sc++) {
+ 		if (ksym == sc->keysym && match(sc->mod, e->state)) {
+-- 
+2.17.2 (Apple Git-113)
+

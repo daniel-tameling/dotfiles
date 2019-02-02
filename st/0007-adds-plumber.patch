@@ -1,0 +1,137 @@
+From b1dbd150ab97e9065111c59c448f5acf36e746ae Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Wed, 30 Jan 2019 22:01:22 +0100
+Subject: [PATCH 7/8] adds plumber
+
+---
+ st.c | 27 +++++++++++++++------------
+ x.c  | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 12 deletions(-)
+
+diff --git a/st.c b/st.c
+index f5e7fc8..e515773 100644
+--- a/st.c
++++ b/st.c
+@@ -9,6 +9,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <signal.h>
++#include <stdatomic.h>
+ #include <sys/ioctl.h>
+ #include <sys/select.h>
+ #include <sys/types.h>
+@@ -191,6 +192,8 @@ static STREscape strescseq;
+ static int iofd = 1;
+ static int cmdfd;
+ static pid_t pid;
++volatile sig_atomic_t doexit;
++volatile _Atomic int shexitstat;
+ 
+ static uchar utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
+ static uchar utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
+@@ -689,18 +692,18 @@ sigchld(int a)
+ {
+ 	int stat;
+ 	pid_t p;
+-
+-	if ((p = waitpid(pid, &stat, WNOHANG)) < 0)
+-		die("waiting for pid %hd failed: %s\n", pid, strerror(errno));
+-
+-	if (pid != p)
+-		return;
+-
+-	if (WIFEXITED(stat) && WEXITSTATUS(stat))
+-		die("child exited with status %d\n", WEXITSTATUS(stat));
+-	else if (WIFSIGNALED(stat))
+-		die("child terminated due to signal %d\n", WTERMSIG(stat));
+-	exit(0);
++        int olderrno = errno;
++
++        for (;;) {
++                p = waitpid(-1, &stat, WNOHANG);
++                if (p <= 0)
++                        break;
++                if (pid == p) {
++                        doexit = 1;
++                        shexitstat = stat;
++                }
++        }
++        errno = olderrno;
+ }
+ 
+ void
+diff --git a/x.c b/x.c
+index 83f3dcb..c695a82 100644
+--- a/x.c
++++ b/x.c
+@@ -5,6 +5,7 @@
+ #include <locale.h>
+ #include <signal.h>
+ #include <sys/select.h>
++#include <sys/wait.h>
+ #include <time.h>
+ #include <unistd.h>
+ #include <libgen.h>
+@@ -216,6 +217,8 @@ static XWindow xw;
+ static XSelection xsel;
+ static TermWindow win;
+ extern Term term;
++extern volatile sig_atomic_t doexit;
++extern volatile _Atomic int shexitstat;
+ 
+ /* Font Ring Cache */
+ enum {
+@@ -659,6 +662,8 @@ xsetsel(char *str)
+ void
+ brelease(XEvent *e)
+ {
++        pid_t child;
++        char* cmd;
+ 	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forceselmod)) {
+ 		mousereport(e);
+ 		return;
+@@ -668,6 +673,27 @@ brelease(XEvent *e)
+ 		selpaste(NULL);
+ 	else if (e->xbutton.button == Button1)
+ 		mousesel(e, 1);
++        else if (e->xbutton.button == Button3) {
++                if (xsel.primary != NULL) {
++                        if (e->xkey.state & ControlMask) {
++                                switch(child = fork()) {
++                                case -1:
++                                        return;
++                                case 0:
++                                        cmd = xmalloc(strlen(websearch) + strlen(xsel.primary) + 1);
++                                        sprintf(cmd, "%s%s", websearch, xsel.primary);
++                                        execvp("/usr/bin/open", (char *const []) {"/usr/bin/open", "/Applications/Safari.app/", cmd, NULL});
++                                        _exit(127);
++                                }
++                        } else {
++                                cmd = xmalloc(strlen("plumber") + 1 + strlen(xsel.primary) + strlen("\r") + 1);
++                                sprintf(cmd, "%s %s\r", "plumber", xsel.primary);
++                                ttywrite("\x15", strlen("\x15"), 0);
++                                ttywrite(cmd, strlen(cmd), 0);
++                                free(cmd);
++                        }
++                }
++        }        
+ }
+ 
+ void
+@@ -1834,6 +1860,13 @@ run(void)
+ 				continue;
+ 			die("select failed: %s\n", strerror(errno));
+ 		}
++                if (doexit) {
++                        if (WIFEXITED(shexitstat) && WEXITSTATUS(shexitstat))
++                                die("child exited with status %d\n", WEXITSTATUS(shexitstat));
++                        else if (WIFSIGNALED(shexitstat))
++                                die("child terminated due to signal %d\n", WTERMSIG(shexitstat));
++                        exit(0);
++                }
+ 		if (FD_ISSET(ttyfd, &rfd)) {
+ 			ttyread();
+ 			if (blinktimeout) {
+-- 
+2.17.2 (Apple Git-113)
+

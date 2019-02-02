@@ -1,0 +1,46 @@
+From 0345e5779dab7892c58db81a80e9696befa63783 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Sun, 1 Apr 2018 07:51:33 +0200
+Subject: [PATCH 1/8] adapted config.mk to Mac OS X
+
+---
+ config.mk | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/config.mk b/config.mk
+index 5059632..b8e56e2 100644
+--- a/config.mk
++++ b/config.mk
+@@ -4,21 +4,21 @@ VERSION = 0.8.1
+ # Customize below to fit your system
+ 
+ # paths
+-PREFIX = /usr/local
++PREFIX = /Users/tameling/tools/st
+ MANPREFIX = $(PREFIX)/share/man
+ 
+-X11INC = /usr/X11R6/include
+-X11LIB = /usr/X11R6/lib
++X11INC = /opt/local/include
++X11LIB = /opt/local/lib
+ 
+ PKG_CONFIG = pkg-config
+ 
+ # includes and libs
+ INCS = -I$(X11INC) \
+-       `$(PKG_CONFIG) --cflags fontconfig` \
+-       `$(PKG_CONFIG) --cflags freetype2`
+-LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft \
+-       `$(PKG_CONFIG) --libs fontconfig` \
+-       `$(PKG_CONFIG) --libs freetype2`
++       `pkg-config --cflags fontconfig` \
++       `pkg-config --cflags freetype2`
++LIBS = -L$(X11LIB) -lm -lX11 -lutil -lXft \
++       `pkg-config --libs fontconfig` \
++       `pkg-config --libs freetype2`
+ 
+ # flags
+ STCPPFLAGS = -DVERSION=\"$(VERSION)\" -D_XOPEN_SOURCE=600
+-- 
+2.17.2 (Apple Git-113)
+

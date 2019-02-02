@@ -1,0 +1,80 @@
+From d739099873ff5a54c3ee47bd5aba6ba45c108546 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Wed, 30 Jan 2019 21:22:35 +0100
+Subject: [PATCH 6/8] =?UTF-8?q?adds=20German=20Umlaute,=20=C3=9F,=20and=20?=
+ =?UTF-8?q?Euro-Symbol?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ config.def.h | 12 ++++++++++++
+ x.c          | 15 +++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/config.def.h b/config.def.h
+index 16830c8..11cd1e7 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -188,6 +188,18 @@ static Shortcut shortcuts[] = {
+ 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+ };
+ 
++static Specialchar specialchars[] = {
++	/* mask                 keysym string */
++        { ControlMask|Mod1Mask, XK_a,  u8"ä" }, /* { 0x00, 0xe4 } */
++        { TERMMOD|Mod1Mask,     XK_A,  u8"Ä" }, /* { 0x00, 0xc4 } */
++        { ControlMask|Mod1Mask, XK_o,  u8"ö" }, /* { 0x00, 0xf6 } */
++        { TERMMOD|Mod1Mask,     XK_O,  u8"Ö" }, /* { 0x00, 0xd6 } */
++        { ControlMask|Mod1Mask, XK_u,  u8"ü" }, /* { 0x00, 0xfc } */
++        { TERMMOD|Mod1Mask,     XK_U,  u8"Ü" }, /* { 0x00, 0xdc } */
++        { ControlMask|Mod1Mask, XK_s,  u8"ß" }, /* { 0x00, 0xdf } */
++        { ControlMask|Mod1Mask, XK_e,  u8"€" }, /* { 0xe2, 0x82, 0xac } */
++};
++
+ /*
+  * Special keys (change & recompile st.info accordingly)
+  *
+diff --git a/x.c b/x.c
+index 6f41d99..83f3dcb 100644
+--- a/x.c
++++ b/x.c
+@@ -28,6 +28,12 @@ typedef struct {
+ 	const Arg arg;
+ } Shortcut;
+ 
++typedef struct {
++	uint mod;
++	KeySym keysym;
++        char *str;
++} Specialchar;
++
+ typedef struct {
+ 	uint b;
+ 	uint mask;
+@@ -1709,6 +1715,7 @@ kpress(XEvent *ev)
+ 	Rune c;
+ 	Status status;
+ 	Shortcut *bp;
++        Specialchar *sc;
+ 
+ 	if (IS_SET(MODE_KBDLOCK))
+ 		return;
+@@ -1722,6 +1729,14 @@ kpress(XEvent *ev)
+ 		}
+ 	}
+ 
++        /* 1.1 specialchars */
++	for (sc = specialchars; sc < specialchars + LEN(specialchars); sc++) {
++		if (ksym == sc->keysym && match(sc->mod, e->state)) {
++			ttywrite(sc->str, strlen(sc->str), 1);
++			return;
++		}
++	}
++
+ 	/* 2. custom keys from config.h */
+ 	if ((customkey = kmap(ksym, e->state))) {
+ 		ttywrite(customkey, strlen(customkey), 1);
+-- 
+2.17.2 (Apple Git-113)
+
