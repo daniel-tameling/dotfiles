@@ -3,6 +3,7 @@ macro index ji "<change-folder> =INBOX<enter>" "goto INBOX"
 macro index jd "<change-folder> =[Gmail]/Drafts<enter>" "goto Drafts"
 macro index js "<change-folder> =[Gmail]/Sent<quote-char><space>Mail<enter>" "goto Sent Mail"
 macro index jt "<change-folder> =[Gmail]/Trash<enter>" "goto Trash"
+bind index,pager jj change-folder
 macro index,pager G "!mbsync -a^M" "Update through mbsync"
 # macro index,pager G '<sync-mailbox> y !mbsync -a^M'
 
@@ -47,13 +48,16 @@ macro index k "<shell-escape>mu index --rebuild --maildir=~/myMail/gmail" "rebui
 macro index z "<shell-escape>mu find --clearlinks --format=links --linksdir=~/.mutt/mu-find-results " "mu find"
 macro index Z "<change-folder-readonly>~/.mutt/mu-find-results" "mu find results"
 
+bind index,pager n mail
+bind index m tag-entry
+
 bind index,pager t noop
 bind index,pager td delete-thread
 bind index,pager tu undelete-thread
 bind index,pager tr read-thread
 bind index,pager tp previous-thread
 bind index,pager tn next-thread
-bind index       tt tag-thread
+bind index       tm tag-thread
 bind index,pager tf root-message
 bind index,pager tb parent-message
 bind generic,editor,index,pager , search-opposite
@@ -121,8 +125,8 @@ bind index <up> previous-entry
 bind index <down> next-entry
 bind index,pager [ previous-entry
 bind index,pager ] next-entry
-bind index,pager p previous-entry
-bind index,pager n next-entry
+# bind index,pager p previous-entry
+# bind index,pager n next-entry
 bind index,pager { previous-unread
 bind index,pager } next-unread
 bind index,pager R group-reply
