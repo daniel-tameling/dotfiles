@@ -1,34 +1,34 @@
-From a1b45db5153d2bd99a401730e15caa1e4087335a Mon Sep 17 00:00:00 2001
+From 999450f382250e94db66c0952e09fcd2909a316b Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 17 May 2018 19:45:58 +0200
-Subject: [PATCH 1/5] indicator in index in pager view in middle instead 1/3
+Subject: [PATCH 1/4] indicator in index in pager view in middle instead 1/3
 
 ---
  pager.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/pager.c b/pager.c
-index 13d3c67cb..309a439da 100644
+index 8a681c2ff..53a19b3c4 100644
 --- a/pager.c
 +++ b/pager.c
-@@ -1909,7 +1909,7 @@ static void pager_menu_redraw(struct Menu *pager_menu)
+@@ -1948,7 +1948,7 @@ static void pager_custom_redraw(struct Menu *pager_menu)
      else
-       rd->indexlen = PagerIndexLines;
+       rd->indexlen = C_PagerIndexLines;
  
 -    rd->indicator = rd->indexlen / 3;
 +    rd->indicator = rd->indexlen / 2 - 1;
  
      memcpy(rd->pager_window, MuttIndexWindow, sizeof(struct MuttWindow));
      memcpy(rd->pager_status_window, MuttStatusWindow, sizeof(struct MuttWindow));
-@@ -2227,7 +2227,7 @@ int mutt_pager(const char *banner, const char *fname, int flags, struct Pager *e
+@@ -2259,7 +2259,7 @@ int mutt_pager(const char *banner, const char *fname, PagerFlags flags, struct P
    rd.flags = flags;
    rd.extra = extra;
-   rd.indexlen = PagerIndexLines;
+   rd.indexlen = C_PagerIndexLines;
 -  rd.indicator = rd.indexlen / 3;
 +  rd.indicator = rd.indexlen / 2 - 1;
-   rd.helpstr = helpstr;
    rd.searchbuf = searchbuf;
-   rd.has_types = (IsHeader(extra) || (flags & MUTT_SHOWCOLOR)) ? MUTT_TYPES : 0; /* main message or rfc822 attachment */
+   rd.has_types = (IsEmail(extra) || (flags & MUTT_SHOWCOLOR)) ? MUTT_TYPES : 0; /* main message or rfc822 attachment */
+ 
 -- 
-2.15.2 (Apple Git-101.1)
+2.20.1 (Apple Git-117)
 

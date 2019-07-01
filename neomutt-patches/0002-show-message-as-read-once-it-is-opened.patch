@@ -1,7 +1,7 @@
-From 4c0ec54f2c480e80ca595cc6b8a8b994a476a2f5 Mon Sep 17 00:00:00 2001
+From 3aedb19c243482ced7d7cb0874a507ff6440b6be Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 17 May 2018 19:47:22 +0200
-Subject: [PATCH 2/5] show message as read once it is opened
+Subject: [PATCH 2/4] show message as read once it is opened
 
 ---
  hdrline.c | 6 +++---
@@ -9,59 +9,59 @@ Subject: [PATCH 2/5] show message as read once it is opened
  2 files changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/hdrline.c b/hdrline.c
-index 399f3170b..5a2a60c1f 100644
+index f9f22805d..9b153675e 100644
 --- a/hdrline.c
 +++ b/hdrline.c
-@@ -1126,7 +1126,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
-         wch = get_nth_wchar(FlagChars, FlagCharImportant);
-       else if (hdr->replied)
-         wch = get_nth_wchar(FlagChars, FlagCharReplied);
--      else if (hdr->read && (ctx && ctx->msgnotreadyet != hdr->msgno))
-+      else if (hdr->read)
-         wch = get_nth_wchar(FlagChars, FlagCharSEmpty);
-       else if (hdr->old)
-         wch = get_nth_wchar(FlagChars, FlagCharOld);
-@@ -1280,7 +1280,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
-           ch = get_nth_wchar(FlagChars, FlagCharNewThread);
-         else if (threads && thread_is_old(ctx, hdr))
-           ch = get_nth_wchar(FlagChars, FlagCharOldThread);
--        else if (hdr->read && (ctx && (ctx->msgnotreadyet != hdr->msgno)))
-+        else if (hdr->read)
+@@ -1174,7 +1174,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
+         wch = get_nth_wchar(C_FlagChars, FLAG_CHAR_IMPORTANT);
+       else if (e->replied)
+         wch = get_nth_wchar(C_FlagChars, FLAG_CHAR_REPLIED);
+-      else if (e->read && (ctx && (ctx->msgnotreadyet != e->msgno)))
++      else if (e->read)
+         wch = get_nth_wchar(C_FlagChars, FLAG_CHAR_SEMPTY);
+       else if (e->old)
+         wch = get_nth_wchar(C_FlagChars, FLAG_CHAR_OLD);
+@@ -1332,7 +1332,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
+           ch = get_nth_wchar(C_FlagChars, FLAG_CHAR_NEW_THREAD);
+         else if (threads && thread_is_old(ctx, e))
+           ch = get_nth_wchar(C_FlagChars, FLAG_CHAR_OLD_THREAD);
+-        else if (e->read && (ctx && (ctx->msgnotreadyet != e->msgno)))
++        else if (e->read)
          {
-           if (hdr->replied)
-             ch = get_nth_wchar(FlagChars, FlagCharReplied);
-@@ -1347,7 +1347,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
-         first = get_nth_wchar(FlagChars, FlagCharNewThread);
-       else if (threads && thread_is_old(ctx, hdr))
-         first = get_nth_wchar(FlagChars, FlagCharOldThread);
--      else if (hdr->read && (ctx && (ctx->msgnotreadyet != hdr->msgno)))
-+      else if (hdr->read)
+           if (e->replied)
+             ch = get_nth_wchar(C_FlagChars, FLAG_CHAR_REPLIED);
+@@ -1398,7 +1398,7 @@ static const char *index_format_str(char *buf, size_t buflen, size_t col, int co
+         first = get_nth_wchar(C_FlagChars, FLAG_CHAR_NEW_THREAD);
+       else if (threads && thread_is_old(ctx, e))
+         first = get_nth_wchar(C_FlagChars, FLAG_CHAR_OLD_THREAD);
+-      else if (e->read && (ctx && (ctx->msgnotreadyet != e->msgno)))
++      else if (e->read)
        {
-         if (hdr->replied)
-           first = get_nth_wchar(FlagChars, FlagCharReplied);
+         if (e->replied)
+           first = get_nth_wchar(C_FlagChars, FLAG_CHAR_REPLIED);
 diff --git a/pager.c b/pager.c
-index 309a439da..8c2a79b45 100644
+index 53a19b3c4..865edc797 100644
 --- a/pager.c
 +++ b/pager.c
-@@ -2251,7 +2251,6 @@ int mutt_pager(const char *banner, const char *fname, int flags, struct Pager *e
+@@ -2282,7 +2282,6 @@ int mutt_pager(const char *banner, const char *fname, PagerFlags flags, struct P
  
-   if (Context && IsHeader(extra) && !extra->hdr->read)
+   if (Context && IsEmail(extra) && !extra->email->read)
    {
--    Context->msgnotreadyet = extra->hdr->msgno;
-     mutt_set_flag(Context, extra->hdr, MUTT_READ, 1);
+-    Context->msgnotreadyet = extra->email->msgno;
+     mutt_set_flag(Context->mailbox, extra->email, MUTT_READ, true);
    }
  
-@@ -3276,7 +3275,6 @@ int mutt_pager(const char *banner, const char *fname, int flags, struct Pager *e
+@@ -3374,7 +3373,6 @@ int mutt_pager(const char *banner, const char *fname, PagerFlags flags, struct P
          else if (!first)
-           mutt_set_flag(Context, extra->hdr, MUTT_READ, 1);
-         first = 0;
+           mutt_set_flag(Context->mailbox, extra->email, MUTT_READ, true);
+         first = false;
 -        Context->msgnotreadyet = -1;
          pager_menu->redraw |= REDRAW_STATUS | REDRAW_INDEX;
-         if (Resolve)
+         if (C_Resolve)
          {
-@@ -3431,8 +3429,6 @@ int mutt_pager(const char *banner, const char *fname, int flags, struct Pager *e
+@@ -3547,8 +3545,6 @@ int mutt_pager(const char *banner, const char *fname, PagerFlags flags, struct P
    mutt_file_fclose(&rd.fp);
-   if (IsHeader(extra))
+   if (IsEmail(extra))
    {
 -    if (Context)
 -      Context->msgnotreadyet = -1;
@@ -69,5 +69,5 @@ index 309a439da..8c2a79b45 100644
      {
        case -1:
 -- 
-2.15.2 (Apple Git-101.1)
+2.20.1 (Apple Git-117)
 
