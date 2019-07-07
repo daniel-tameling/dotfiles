@@ -72,6 +72,7 @@ set spoolfile = "+/INBOX"
 set postponed = "+/[Gmail]/Drafts"
 set trash = "+/[Gmail]/Trash"
 set copy="no"
+set wrap = -1
 
 # Tell mutt to use the Maildir format
 set mbox_type          = Maildir
@@ -161,7 +162,7 @@ set sidebar_short_path = "yes"
 set sidebar_delim_chars = '/.'
 set sidebar_divider_char = '|'
 set mail_check_stats
-set sidebar_format = '%B%?F? [%F]?%* %?N?%N/?%S '
+set sidebar_format = '%B%* %?N?%N/?%S '
 # Sort the mailboxes in the Sidebar using this method:
 #       count    - total number of messages
 #       flagged  - number of flagged messages
