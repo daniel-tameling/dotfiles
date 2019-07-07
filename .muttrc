@@ -82,8 +82,9 @@ set strict_threads="yes"
 set sort_browser="reverse-date"
 set sort_aux="last-date-received"
 set hide_thread_subject="no"
-set collapse_all="yes"
-unset collapse_unread
+# set collapse_all="yes"
+folder-hook .* "exec collapse-all"
+# unset collapse_unread
 
 # set maildir_trash="yes"
 
@@ -153,7 +154,7 @@ mailboxes "+INBOX" \
 # Should the mailbox paths be abbreviated?
 set sidebar_short_path = "yes"
 # Number of top-level mailbox path subdirectories to truncate for display
-set sidebar_component_depth = 0
+# set sidebar_component_depth = 0
 # When abbreviating mailbox path names, use any of these characters as path
 # separators.  Only the part after the last separators will be shown.
 # For file folders '/' is good.  For IMAP folders, often '.' is useful.

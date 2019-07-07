@@ -3,6 +3,8 @@ color normal     color233     white
 color indicator  color233     brightwhite
 color status     color233     brightwhite
 color tree       color233     white
+color tilde      color233     white
+color prompt     color233     white
 color attachment color233     white
 color bold       color233     brightwhite
 color error      brightwhite  red
@@ -252,12 +254,12 @@ color body       color124         white         "^\-[^\-]+.*"
 # Note: This is a general NeoMutt option which colors all selected items.
 color indicator color233 brightwhite
 # Color of the highlighted, but not open, mailbox.
-color sidebar_highlight color233 color217
+color sidebar_highlight color233 color249
 # Color of the divider separating the Sidebar from NeoMutt panels
 color sidebar_divider color233 white
 # Color to give mailboxes containing flagged mail
-# color sidebar_flagged red white
+color sidebar_flagged color233 white
 # Color to give mailboxes containing new mail
 color sidebar_new color233 color220
 # Color to give mailboxes containing no new/flagged mail, etc.
-color sidebar_ordinary color233 white
+# color sidebar_ordinary color233 white
