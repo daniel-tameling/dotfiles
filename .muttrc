@@ -1,11 +1,15 @@
-bind index,pager j noop
-macro index ji "<change-folder> =INBOX<enter>" "goto INBOX"
-macro index jd "<change-folder> =[Gmail]/Drafts<enter>" "goto Drafts"
-macro index js "<change-folder> =[Gmail]/Sent<quote-char><space>Mail<enter>" "goto Sent Mail"
-macro index jt "<change-folder> =[Gmail]/Trash<enter>" "goto Trash"
-bind index,pager jj change-folder
-macro index,pager G "!mbsync -a^M" "Update through mbsync"
-# macro index,pager G '<sync-mailbox> y !mbsync -a^M'
+bind index,pager g noop
+macro index gi "<change-folder> =INBOX<enter>" "goto INBOX"
+macro index gd "<change-folder> =[Gmail]/Drafts<enter>" "goto Drafts"
+macro index gs "<change-folder> =[Gmail]/Sent<quote-char><space>Mail<enter>" "goto Sent Mail"
+macro index gt "<change-folder> =[Gmail]/Trash<enter>" "goto Trash"
+bind index,pager gg change-folder
+bind index,pager G change-folder-readonly
+
+macro index,pager \ex "!mbsync -a^M" "Update through mbsync"
+bind index,pager x sync-mailbox
+bind index,pager X sync-folder-mailbox
+
 
 set move = no
 
@@ -30,40 +34,129 @@ source $alias_file
 # set my_index_format='set my_col_addr = `echo $((35 * ($(tput cols)-24-19) / 100))`; set my_col_subject = `echo $((65 * ($(tput cols)-24-19) / 100))`; set index_format="%4C %Z %{%a %d/%m/%Y} %-${my_col_addr}.${my_col_addr}L %?M?<%M> ?%-${my_col_subject}.${my_col_subject}s%> %c [%X] "'
 
 # folder-hook .* "$my_index_format"
-# macro index,pager jf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
+# macro index,pager gf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
 
 # set my_index_format='set my_col_addr = `echo $((35 * ($(tput cols)-24-19) / 100))`; set my_col_subject = `echo $((65 * ($(tput cols)-24-19) / 100))`; set index_format="muttindexformat %4C %Z %{%a %d/%m/%Y %R} %-${my_col_addr}.${my_col_addr}L %?M?<%M> ?%-${my_col_subject}.${my_col_subject}s%> %c [%X] |"'
 set my_today=`date +%d/%m/%Y`
 set my_yesterday=`date --date yesterday +%d/%m/%Y`;
-set my_index_format='set my_index_space = `echo $(($(tput cols)-44))`; set index_format="muttindexformat ${my_index_space} %4C %Z %{%a-%d/%m/%Y-%R} %-50.50F %-50.50L %M %-90.90s%> %c [%X] ${my_today} ${my_yesterday}|"'
+set my_index_format='set my_index_space = `echo $(($(tput cols)-44))`; set index_format="muttindexformat ${my_index_space} %4C %Z %[%a-%d/%m/%Y-%R] %-50.50F %-50.50L %M %-100.100s%> %c [%X] ${my_today} ${my_yesterday}|"'
 
 folder-hook .* "$my_index_format"
-macro index,pager jf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
+macro index,pager gf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
 
 subscribe .*@zsh.org .*@suckless.org lmod-users@lists.sourceforge.net isync-devel@lists.sourceforge.net
 alternates johndoe@gmail.com
 
 # mu for searching
-macro index k "<shell-escape>mu index --rebuild --maildir=~/myMail/gmail" "rebuild mu index"
+macro index A "<shell-escape>mu index --rebuild --maildir=~/myMail/gmail" "rebuild mu index"
 macro index z "<shell-escape>mu find --clearlinks --format=links --linksdir=~/.mutt/mu-find-results " "mu find"
 macro index Z "<change-folder-readonly>~/.mutt/mu-find-results" "mu find results"
 
-bind index,pager n mail
-bind index m tag-entry
-
 bind index,pager t noop
-bind index,pager td delete-thread
-bind index,pager tu undelete-thread
-bind index,pager tr read-thread
-bind index,pager tp previous-thread
-bind index,pager tn next-thread
-bind index       tm tag-thread
-bind index,pager tf root-message
-bind index,pager tb parent-message
-bind generic,editor,index,pager , search-opposite
-bind generic,editor,index,pager . search-next
-bind generic,editor,index < top-page
-bind generic,editor,index > bottom-page
+bind index,pager ts noop
+bind index,pager ta  parent-message
+bind index,pager tsa root-message
+bind index,pager tb  break-thread
+bind index,pager td  delete-thread
+bind index,pager tsd delete-subthread
+bind index,pager tl  link-threads
+bind index,pager tr  read-thread
+bind index,pager tsr read-subthread
+bind index,pager tp  previous-thread
+bind index,pager tsp previous-subthread
+bind index,pager tn  next-thread
+bind index,pager tsn next-subthread
+bind index       tm  tag-thread
+bind index       tsm tag-subthread
+bind index,pager tu  undelete-thread
+bind index,pager tsu undelete-subthread
+bind index _ collapse-thread
+bind index <Tab> collapse-thread
+bind index - collapse-all
+
+bind generic,index,pager / search
+bind generic,index,pager , search-opposite
+bind generic,index,pager . search-next
+bind generic,index,pager n search-next
+bind generic,index,pager \e/ search-reverse
+bind generic,index < top-page
+bind generic,index > bottom-page
+bind pager < top
+bind pager > bottom
+bind generic,index <home> first-entry
+bind generic,index <end> last-entry
+bind pager <home> top
+bind pager <end> bottom
+bind generic,index \e< first-entry
+bind generic,index \e> last-entry
+bind pager \e< top
+bind pager \e> bottom
+bind generic,index = middle-page
+
+bind index,pager \cv next-page
+bind index,pager \ev previous-page
+
+bind pager <up> previous-line
+bind pager <down> next-line
+bind pager <left> previous-page
+bind pager <right> next-page
+# bind pager "\e[1;3A" previous-entry
+# bind pager "\e[1;3B" next-entry
+bind index <up> previous-entry
+bind index <down> next-entry
+bind index,pager [ previous-entry
+bind index,pager ] next-entry
+# bind index,pager p previous-entry
+# bind index,pager n next-entry
+bind index,pager { previous-unread
+bind index,pager } next-unread
+bind index,pager \cp previous-undeleted
+bind index,pager \cn next-undeleted
+bind index,pager j previous-undeleted
+bind index,pager k next-undeleted
+
+bind index,pager c mail
+bind index,pager f forward-message
+bind index,pager r reply
+bind index,pager R group-reply
+bind index,pager L list-reply
+bind index,pager \er list-reply
+bind index,pager + bounce-message
+bind index,pager W copy-message
+bind index,pager w save-message
+bind index,pager C recall-message
+bind index,pager \ec resend-message
+bind index,pager d delete-message
+bind index D delete-pattern
+bind index,pager u undelete-message
+bind index U undelete-pattern
+
+bind index,pager s sort-mailbox
+bind index,pager S sort-reverse
+
+bind index l limit
+bind index L show-limit
+bind index m tag-entry
+bind index,pager \el edit-label
+bind index,pager \et edit-type
+bind index,pager P print-message
+bind index,pager v view-attachments
+bind index,pager @ display-address
+bind index N toggle-new
+bind pager N mark-as-new
+bind index,pager F flag-message
+bind index,pager "#" clear-flag
+bind index,pager $ set-flag
+bind generic,index m tag-entry
+bind pager m tag-message
+bind index ~ mark-message
+bind generic,index ";" tag-prefix
+bind index M tag-pattern
+bind index \em untag-pattern
+
+bind index,pager i sidebar-next
+bind index,pager I sidebar-prev
+bind index,pager o sidebar-open
 
 set send_charset="utf-8"
 
@@ -89,15 +182,7 @@ folder-hook .* "exec collapse-all"
 
 # set maildir_trash="yes"
 
-bind index - collapse-thread
-bind index <Tab> collapse-thread
-bind index _ collapse-all
-
 set meta_key=yes
-bind index,pager \cv next-page
-bind index,pager \ev previous-page
-bind index,pager x sync-mailbox
-bind index,pager A sync-folder-mailbox
 
 # color hdrdefault white black  # headers white on black
 # color header brightgreen black ^From:  # sender's name in green
@@ -117,22 +202,6 @@ hdr_order From: To: Cc: Date: Subject:
 
 set pager_context=4
 set pager_index_lines=8
-bind pager <up> previous-line
-bind pager <down> next-line
-bind pager <left> previous-page
-bind pager <right> next-page
-# bind pager "\e[1;3A" previous-entry
-# bind pager "\e[1;3B" next-entry
-bind index <up> previous-entry
-bind index <down> next-entry
-bind index,pager [ previous-entry
-bind index,pager ] next-entry
-# bind index,pager p previous-entry
-# bind index,pager n next-entry
-bind index,pager { previous-unread
-bind index,pager } next-unread
-bind index,pager R group-reply
-bind index,pager L list-reply
 
 set pager_stop="yes"
 unset markers
@@ -170,10 +239,5 @@ set sidebar_format = '%B%* %?N?%N/?%S '
 #       path     - mailbox path
 #       unsorted - do not sort the mailboxes
 set sidebar_sort_method = 'unsorted'
-
-# bind index,pager \Cp sidebar-prev
-bind index,pager \Cn sidebar-next
-bind index,pager o sidebar-open
-bind index,pager B sidebar-toggle-visible
 
 source ~/.mutt/colors
