@@ -15,6 +15,11 @@ color header     color124     white     .  # all (x-)header
 # color header     color196     white     '^(to|cc|bcc):'
 # color header     color196     white     '^from:'
 # color header     color196     white     '^subject:'
+color compose header           color233     white
+color compose security_encrypt color233     white
+color compose security_sign    color233     white
+color compose security_both    color233     white
+color compose security_none    color233     white
 
 # color index      blue                black      ~Q  # those already replied to.
 # color index      blue                default    ~D  # deleted
@@ -252,7 +257,7 @@ color body       color124         white         "^\-[^\-]+.*"
 #       color OBJECT FOREGROUND BACKGROUND
 # Color of the current, open, mailbox
 # Note: This is a general NeoMutt option which colors all selected items.
-color indicator color233 brightwhite
+color sidebar_indicator color233 brightwhite
 # Color of the highlighted, but not open, mailbox.
 color sidebar_highlight color233 color249
 # Color of the divider separating the Sidebar from NeoMutt panels
