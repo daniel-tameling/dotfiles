@@ -178,7 +178,7 @@ set sort_aux="last-date-received"
 set hide_thread_subject="no"
 # set collapse_all="yes"
 folder-hook .* "exec collapse-all"
-# unset collapse_unread
+unset collapse_unread
 
 # set maildir_trash="yes"
 
