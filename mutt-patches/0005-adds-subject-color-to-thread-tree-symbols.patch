@@ -1,0 +1,25 @@
+From c9e54a0a1097533c3ef77d041d1e220b064dac56 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Thu, 12 Sep 2019 21:37:42 +0200
+Subject: [PATCH 5/6] adds subject color to thread tree symbols
+
+---
+ menu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/menu.c b/menu.c
+index df798c98..f7258a57 100644
+--- a/menu.c
++++ b/menu.c
+@@ -48,7 +48,7 @@ static void print_enriched_string (int attr, unsigned char *s, int do_color)
+     if (*s < MUTT_TREE_MAX)
+     {
+       if (do_color)
+-	SETCOLOR (MT_COLOR_TREE);
++        ATTRSET(attr);
+       while (*s && *s < MUTT_TREE_MAX)
+       {
+ 	switch (*s)
+-- 
+2.20.1 (Apple Git-117)
+

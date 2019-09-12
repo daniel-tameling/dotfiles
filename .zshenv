@@ -23,3 +23,5 @@ path=($new_path $path)
 manpath=($manpath ${new_manpath:|manpath})
 typeset -aU path
 unset new_manpath new_path
+
+export MUTTSYNCCMD="mbsync -a"

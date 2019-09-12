@@ -1,0 +1,70 @@
+From c907d9dcb254029c5786fd9d73980993c45c5f73 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Thu, 12 Sep 2019 21:36:56 +0200
+Subject: [PATCH 4/6] don't leave pager if prev/next-entry on first/last
+ message
+
+---
+ curs_main.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/curs_main.c b/curs_main.c
+index 4158e239..75076edc 100644
+--- a/curs_main.c
++++ b/curs_main.c
+@@ -1593,7 +1593,12 @@ int mutt_index_menu (void)
+ 	if (menu->current >= Context->vcount - 1)
+ 	{
+ 	  if (menu->menu == MENU_MAIN)
+-	    mutt_error _("You are on the last message.");
++            mutt_error _("You are on the last message.");
++          else if (menu->menu == MENU_PAGER)
++          {
++            op = OP_DISPLAY_MESSAGE;
++            continue;
++          }
+ 	  break;
+ 	}
+ 	if ((menu->current = ci_next_undeleted (menu->current)) == -1)
+@@ -1619,6 +1624,11 @@ int mutt_index_menu (void)
+ 	{
+ 	  if (menu->menu == MENU_MAIN)
+ 	    mutt_error _("You are on the last message.");
++          else if (menu->menu == MENU_PAGER)
++          {
++            op = OP_DISPLAY_MESSAGE;
++            continue;
++          }
+ 	  break;
+ 	}
+ 	menu->current++;
+@@ -1638,6 +1648,11 @@ int mutt_index_menu (void)
+ 	if (menu->current < 1)
+ 	{
+ 	  mutt_error _("You are on the first message.");
++          if (menu->menu == MENU_PAGER)
++          {
++            op = OP_DISPLAY_MESSAGE;
++            continue;
++          }
+ 	  break;
+ 	}
+ 	if ((menu->current = ci_previous_undeleted (menu->current)) == -1)
+@@ -1661,7 +1676,13 @@ int mutt_index_menu (void)
+         CHECK_VISIBLE;
+ 	if (menu->current < 1)
+ 	{
+-	  if (menu->menu == MENU_MAIN) mutt_error _("You are on the first message.");
++	  if (menu->menu == MENU_MAIN)
++            mutt_error _("You are on the first message.");
++          else if (menu->menu == MENU_PAGER)
++          {
++            op = OP_DISPLAY_MESSAGE;
++            continue;
++          }
+ 	  break;
+ 	}
+ 	menu->current--;
+-- 
+2.20.1 (Apple Git-117)
+

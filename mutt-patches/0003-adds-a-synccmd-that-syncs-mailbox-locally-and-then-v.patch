@@ -1,0 +1,111 @@
+From 5a65f4667c02ef618985877b41927f778a0d80e2 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Thu, 12 Sep 2019 21:35:49 +0200
+Subject: [PATCH 3/6] adds a synccmd that syncs mailbox locally and then via
+ external cmd
+
+---
+ OPS         |  1 +
+ curs_main.c | 18 ++++++++++++++++++
+ functions.h |  2 ++
+ globals.h   |  1 +
+ init.c      |  3 +++
+ 5 files changed, 25 insertions(+)
+
+diff --git a/OPS b/OPS
+index 2fad8f12..264fdf9d 100644
+--- a/OPS
++++ b/OPS
+@@ -131,6 +131,7 @@ OP_MAIN_READ_SUBTHREAD "mark the current subthread as read"
+ OP_MAIN_ROOT_MESSAGE "jump to root message in thread"
+ OP_MAIN_SET_FLAG "set a status flag on a message"
+ OP_MAIN_SYNC_FOLDER "save changes to mailbox"
++OP_MAIN_SYNC_FOLDER_MAILBOX "save changes to mailbox and sync"
+ OP_MAIN_TAG_PATTERN "tag messages matching a pattern"
+ OP_MAIN_UNDELETE_PATTERN "undelete messages matching a pattern"
+ OP_MAIN_UNTAG_PATTERN "untag messages matching a pattern"
+diff --git a/curs_main.c b/curs_main.c
+index 2054f42d..4158e239 100644
+--- a/curs_main.c
++++ b/curs_main.c
+@@ -1189,6 +1189,7 @@ int mutt_index_menu (void)
+ #endif
+ 
+       case OP_MAIN_SYNC_FOLDER:
++      case OP_MAIN_SYNC_FOLDER_MAILBOX:
+ 
+ 	if (Context && !Context->msgcount)
+ 	  break;
+@@ -1243,6 +1244,23 @@ int mutt_index_menu (void)
+ 	if (!Context->path)
+ 	  FREE (&Context);
+ 
++        if (op == OP_MAIN_SYNC_FOLDER_MAILBOX)
++        {
++          if (!SyncCmd)
++            mutt_error(_("Unable to perform external sync: MUTTSYNCCMD has not been set during startup."));
++          else {
++            mutt_endwin(NULL);
++            if (mutt_system(SyncCmd) != 0)
++            {
++              mutt_error(_("Failed to perform external sync!"));
++            }
++            mutt_any_key_to_continue(NULL);
++            mutt_resize_screen();
++            keypad(stdscr, true);
++            clearok(stdscr, true);
++          }
++        }
++
+ 	/* if we were in the pager, redisplay the message */
+ 	if (menu->menu == MENU_PAGER)
+ 	{
+diff --git a/functions.h b/functions.h
+index 5b9459b5..19a3eddb 100644
+--- a/functions.h
++++ b/functions.h
+@@ -157,6 +157,7 @@ const struct binding_t OpMain[] = { /* map: index */
+   { "mark-message",		OP_MARK_MSG,			"~" },
+   { "buffy-list",		OP_BUFFY_LIST,			"." },
+   { "sync-mailbox",		OP_MAIN_SYNC_FOLDER,		"$" },
++  { "sync-folder-mailbox",	OP_MAIN_SYNC_FOLDER_MAILBOX,	NULL },
+   { "display-address",		OP_DISPLAY_ADDRESS,		"@" },
+   { "pipe-message",		OP_PIPE,			"|" },
+   { "next-new",			OP_MAIN_NEXT_NEW,		NULL },
+@@ -264,6 +265,7 @@ const struct binding_t OpPager[] = { /* map: pager */
+   { "previous-page",	OP_PREV_PAGE,			"-" },
+   { "top",		OP_PAGER_TOP,			"^" },
+   { "sync-mailbox",	OP_MAIN_SYNC_FOLDER,            "$" },
++  { "sync-folder-mailbox", OP_MAIN_SYNC_FOLDER_MAILBOX,	NULL },
+   { "shell-escape",	OP_SHELL_ESCAPE,		"!" },
+   { "enter-command",	OP_ENTER_COMMAND,		":" },
+   { "buffy-list",	OP_BUFFY_LIST,			"." },
+diff --git a/globals.h b/globals.h
+index 4d508221..1d9a64e2 100644
+--- a/globals.h
++++ b/globals.h
+@@ -155,6 +155,7 @@ WHERE char *SslCACertFile;
+ #endif
+ WHERE mbchar_table *StChars;
+ WHERE char *Status;
++WHERE char *SyncCmd;
+ WHERE char *Tempdir;
+ WHERE mbchar_table *Tochars;
+ WHERE char *TrashPath;
+diff --git a/init.c b/init.c
+index e02f1201..7754d28c 100644
+--- a/init.c
++++ b/init.c
+@@ -3552,6 +3552,9 @@ void mutt_init (int skip_sys_rc, LIST *commands)
+   Editor = safe_strdup (p);
+   Visual = safe_strdup (p);
+ 
++  if ((p = getenv ("MUTTSYNCCMD")) != NULL)
++    SyncCmd = safe_strdup (p);
++
+   if ((p = getenv ("REPLYTO")) != NULL)
+   {
+     BUFFER buf, token;
+-- 
+2.20.1 (Apple Git-117)
+

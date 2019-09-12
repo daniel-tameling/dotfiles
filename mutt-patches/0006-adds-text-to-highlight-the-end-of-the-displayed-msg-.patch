@@ -1,0 +1,38 @@
+From 4892cd0a1a853716223b306e463e3261dfd71479 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Thu, 12 Sep 2019 21:38:13 +0200
+Subject: [PATCH 6/6] adds text to highlight the end of the displayed msg in
+ pager view
+
+---
+ pager.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/pager.c b/pager.c
+index cf3193f2..f52b9ba2 100644
+--- a/pager.c
++++ b/pager.c
+@@ -1824,6 +1824,20 @@ static void pager_menu_redraw (MUTTMENU *pager_menu)
+     } while (rd->force_redraw);
+ 
+     SETCOLOR (MT_COLOR_TILDE);
++    if (IsHeader (rd->extra) && rd->lines < rd->pager_window->rows) {
++//      mutt_window_clrtoeol (rd->pager_window);
++      /* eom needs to be 1 byte == 1 character */
++      char *eom = "-- END OF MESSAGE ";
++      i = 0;
++      while (i < rd->pager_window->cols && i < strlen(eom)) {
++              addch (eom[i]);
++              i++;
++      }
++      for (; i < rd->pager_window->cols; i++)
++        addch ('-');
++      rd->lines++;
++      mutt_window_move (rd->pager_window, rd->lines, 0);
++    }
+     while (rd->lines < rd->pager_window->rows)
+     {
+       mutt_window_clrtoeol (rd->pager_window);
+-- 
+2.20.1 (Apple Git-117)
+

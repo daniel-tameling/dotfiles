@@ -1,0 +1,90 @@
+From 1c1cce952bb08e8f8263b1fb4b6f6ad8ca497fd8 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Thu, 12 Sep 2019 21:32:28 +0200
+Subject: [PATCH 2/6] shows message as read as soon as it is opened
+
+---
+ hdrline.c | 5 ++---
+ mutt.h    | 1 -
+ mx.c      | 1 -
+ pager.c   | 3 ---
+ 4 files changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/hdrline.c b/hdrline.c
+index c83714f9..015369f3 100644
+--- a/hdrline.c
++++ b/hdrline.c
+@@ -619,7 +619,7 @@ hdr_format_str (char *dest,
+ 	ch = '!';
+       else if (hdr->replied)
+ 	ch = 'r';
+-      else if (hdr->read && (ctx && ctx->msgnotreadyet != hdr->msgno))
++      else if (hdr->read)
+ 	ch = '-';
+       else if (hdr->old)
+ 	ch = 'O';
+@@ -696,8 +696,7 @@ hdr_format_str (char *dest,
+ 
+       snprintf (buf2, sizeof (buf2),
+ 		"%c%c%s", (THREAD_NEW ? 'n' : (THREAD_OLD ? 'o' :
+-		((hdr->read && (ctx && ctx->msgnotreadyet != hdr->msgno))
+-		? (hdr->replied ? 'r' : ' ') : (hdr->old ? 'O' : 'N')))),
++		(hdr->read ? (hdr->replied ? 'r' : ' ') : (hdr->old ? 'O' : 'N')))),
+ 		hdr->deleted ? 'D' : (hdr->attach_del ? 'd' : ch),
+ 		hdr->tagged ? "*" :
+ 		(hdr->flagged ? "!" :
+diff --git a/mutt.h b/mutt.h
+index dcc3a2f1..755db474 100644
+--- a/mutt.h
++++ b/mutt.h
+@@ -1035,7 +1035,6 @@ typedef struct _context
+   int unread;			/* how many unread messages? */
+   int deleted;			/* how many deleted messages */
+   int flagged;			/* how many flagged messages */
+-  int msgnotreadyet;		/* which msg "new" in pager, -1 if none */
+ 
+   short magic;			/* mailbox type */
+ 
+diff --git a/mx.c b/mx.c
+index 472e8ee3..68d926aa 100644
+--- a/mx.c
++++ b/mx.c
+@@ -600,7 +600,6 @@ CONTEXT *mx_open_mailbox (const char *path, int flags, CONTEXT *pctx)
+   else
+     ctx->realpath = safe_strdup (realpathbuf);
+ 
+-  ctx->msgnotreadyet = -1;
+   ctx->collapsed = 0;
+ 
+   for (rc=0; rc < RIGHTSMAX; rc++)
+diff --git a/pager.c b/pager.c
+index 110c9885..cf3193f2 100644
+--- a/pager.c
++++ b/pager.c
+@@ -1951,7 +1951,6 @@ mutt_pager (const char *banner, const char *fname, int flags, pager_t *extra)
+ 
+   if (IsHeader (extra) && !extra->hdr->read)
+   {
+-    Context->msgnotreadyet = extra->hdr->msgno;
+     mutt_set_flag (Context, extra->hdr, MUTT_READ, 1);
+   }
+ 
+@@ -2770,7 +2769,6 @@ search_next:
+ 	else if (!first)
+ 	  mutt_set_flag (Context, extra->hdr, MUTT_READ, 1);
+ 	first = 0;
+-        Context->msgnotreadyet = -1;
+ 	pager_menu->redraw |= REDRAW_STATUS | REDRAW_INDEX;
+ 	if (option (OPTRESOLVE))
+ 	{
+@@ -2921,7 +2919,6 @@ search_next:
+   safe_fclose (&rd.fp);
+   if (IsHeader (extra))
+   {
+-    Context->msgnotreadyet = -1;
+     switch (rc)
+     {
+       case -1:
+-- 
+2.20.1 (Apple Git-117)
+
