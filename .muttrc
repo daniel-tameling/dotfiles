@@ -1,8 +1,9 @@
 bind index,pager g noop
-macro index gi "<change-folder> =INBOX<enter>" "goto INBOX"
-macro index gd "<change-folder> =[Gmail]/Drafts<enter>" "goto Drafts"
-macro index gs "<change-folder> =[Gmail]/Sent<quote-char><space>Mail<enter>" "goto Sent Mail"
-macro index gt "<change-folder> =[Gmail]/Trash<enter>" "goto Trash"
+macro index gi "<change-folder> =Inbox<enter>" "goto Inbox"
+macro index gd "<change-folder> =Drafts<enter>" "goto Drafts"
+macro index gs "<change-folder> =Sent<enter>" "goto Sent"
+macro index gt "<change-folder> =Trash<enter>" "goto Trash"
+macro index ga "<change-folder> =Archiv<enter>" "goto Archiv"
 bind index,pager gg change-folder
 bind index,pager G change-folder-readonly
 
@@ -47,7 +48,7 @@ set my_index_format='set my_index_space = `echo $(($(tput cols)-44))`; set index
 folder-hook .* "$my_index_format"
 macro index,pager gf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
 
-subscribe .*@zsh.org .*@suckless.org lmod-users@lists.sourceforge.net isync-devel@lists.sourceforge.net
+subscribe .*@zsh.org .*@suckless.org lmod-users@lists.sourceforge.net isync-devel@lists.sourceforge.net .*@mutt.org
 alternates johndoe@gmail.com
 
 # mu for searching
@@ -164,9 +165,9 @@ bind index,pager o sidebar-open
 set send_charset="utf-8"
 
 set folder = "~/myMail/gmail"
-set spoolfile = "+/INBOX"
-set postponed = "+/[Gmail]/Drafts"
-set trash = "+/[Gmail]/Trash"
+set spoolfile = "+/Inbox"
+set postponed = "+Drafts"
+set trash = "+Trash"
 set copy="no"
 set wrap = -1
 
@@ -219,10 +220,11 @@ set print_command="~/.mutt/print-pdf-wrapper.sh"
 
 set sidebar_visible = "yes"
 set sidebar_width = 19
-mailboxes "+INBOX" \
-          "+/[Gmail]/Sent Mail" \
-          "+/[Gmail]/Trash" \
-          "+/[Gmail]/Drafts"
+mailboxes "+Inbox" \
+          "+Sent" \
+          "+Trash" \
+          "+Drafts" \
+          "+Archiv"
 
 # Should the mailbox paths be abbreviated?
 set sidebar_short_path = "yes"

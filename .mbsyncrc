@@ -15,13 +15,56 @@ Account PrivatGmail
 
 MaildirStore gmail-local
 Path ~/myMail/gmail/
-Inbox ~/myMail/gmail/INBOX
+Inbox ~/myMail/gmail/Inbox
 SubFolders Verbatim
 
-Channel gmail
-Master :gmail-remote:
-Slave :gmail-local:
-Patterns "INBOX" "[Gmail]/Sent Mail" "[Gmail]/Trash" "[Gmail]/Drafts" "[Gmail]/Starred"
+Channel gmail-inbox
+Master :gmail-remote:"INBOX"
+Slave :gmail-local:"Inbox"
+# Patterns "INBOX" "[Gmail]/Sent Mail" "[Gmail]/Trash" "[Gmail]/Drafts" "[Gmail]/Starred" "[Gmail]/Archiv" "[Gmail]/Stocks" "[Gmail]/Spenden"
 Create Both
 Expunge Both
 SyncState *
+
+Channel gmail-sent
+Master :gmail-remote:"[Gmail]/Sent Mail"
+Slave :gmail-local:"Sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-trash
+Master :gmail-remote:"[Gmail]/Trash"
+Slave :gmail-local:"Trash"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-drafts
+Master :gmail-remote:"[Gmail]/Drafts"
+Slave :gmail-local:"Drafts"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-starred
+Master :gmail-remote:"[Gmail]/Starred"
+Slave :gmail-local:"Starred"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-archiv
+Master :gmail-remote:"[Gmail]/Archiv"
+Slave :gmail-local:"Archiv"
+Create Both
+Expunge Both
+SyncState *
+
+Group gmail
+Channel gmail-inbox
+Channel gmail-sent
+Channel gmail-trash
+Channel gmail-drafts
+Channel gmail-starred
+Channel gmail-archiv
