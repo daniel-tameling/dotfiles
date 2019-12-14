@@ -1,33 +1,40 @@
-From d216cd69955206b28b70cb7aa99f8f27e0f86561 Mon Sep 17 00:00:00 2001
+From 7c03d8ca332cf66437dfa61b04ee39a926b1ba47 Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Wed, 30 Jan 2019 20:31:00 +0100
 Subject: [PATCH 5/8] applies fixed
  st-scrollback-mouse-altscreen-20190106-e23acb9.diff
 
 ---
- config.def.h |  4 ++--
+ config.def.h | 10 +++++-----
  st.c         | 44 +-------------------------------------------
  st.h         | 42 ++++++++++++++++++++++++++++++++++++++++++
- x.c          | 15 ++++++++++-----
+ x.c          |  9 +++++++--
  4 files changed, 55 insertions(+), 50 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index a6d2fb9..16830c8 100644
+index 819e5a2..84063d9 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -162,8 +162,8 @@ static MouseShortcut mshortcuts[] = {
- 
- MouseKey mkeys[] = {
- 	/* button               mask            function        argument */
--	{ Button4,              ShiftMask,      kscrollup,      {.i =  1} },
--	{ Button5,              ShiftMask,      kscrolldown,    {.i =  1} },
-+	{ Button4,              XK_NO_MOD,      kscrollup,      {.i =  1} },
-+	{ Button5,              XK_NO_MOD,      kscrolldown,    {.i =  1} },
+@@ -162,12 +162,12 @@ static uint forcemousemod = ShiftMask;
+  * Beware that overloading Button1 will disable the selection.
+  */
+ static MouseShortcut mshortcuts[] = {
+-	/* mask                 button   function        argument       release */
++	/* mask                 button   function        argument       release  onlyaltscreen*/
+ 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
+-	{ ShiftMask,            Button4, kscrollup,      {.i =  1} },
+-	{ ShiftMask,            Button5, kscrolldown,    {.i =  1} },
+-	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
+-	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\005"} },
++        { XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"}, 0,       1 },
++        { XK_ANY_MOD,           Button5, ttysend,        {.s = "\005"}, 0,       1 },
++	{ XK_ANY_MOD,           Button4, kscrollup,      {.i =  1} },
++	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i =  1} },
  };
  
  /* Internal keyboard shortcuts. */
 diff --git a/st.c b/st.c
-index 6e32b06..f5e7fc8 100644
+index 503bd90..87a562d 100644
 --- a/st.c
 +++ b/st.c
 @@ -35,7 +35,6 @@
@@ -110,7 +117,7 @@ index 6e32b06..f5e7fc8 100644
  static CSIEscape csiescseq;
  static STREscape strescseq;
 diff --git a/st.h b/st.h
-index 3592957..c450dbf 100644
+index 1332cf1..bf3773c 100644
 --- a/st.h
 +++ b/st.h
 @@ -19,6 +19,18 @@
@@ -170,10 +177,18 @@ index 3592957..c450dbf 100644
  	int i;
  	uint ui;
 diff --git a/x.c b/x.c
-index fafc7e5..6f41d99 100644
+index ebc341f..fd17fd7 100644
 --- a/x.c
 +++ b/x.c
-@@ -66,6 +66,7 @@ static void zoomreset(const Arg *);
+@@ -34,6 +34,7 @@ typedef struct {
+ 	void (*func)(const Arg *);
+ 	const Arg arg;
+ 	uint  release;
++        int onlyaltscreen; /* if 1 call func only when in altscreen */
+ } MouseShortcut;
+ 
+ typedef struct {
+@@ -69,6 +70,7 @@ static void ttysend(const Arg *);
  
  /* macros */
  #define IS_SET(flag)		((win.mode & (flag)) != 0)
@@ -181,7 +196,7 @@ index fafc7e5..6f41d99 100644
  #define TRUERED(x)		(((x) & 0xff0000) >> 8)
  #define TRUEGREEN(x)		(((x) & 0xff00))
  #define TRUEBLUE(x)		(((x) & 0xff) << 8)
-@@ -74,6 +75,7 @@ typedef XftDraw *Draw;
+@@ -77,6 +79,7 @@ typedef XftDraw *Draw;
  typedef XftColor Color;
  typedef XftGlyphFontSpec GlyphFontSpec;
  
@@ -189,7 +204,7 @@ index fafc7e5..6f41d99 100644
  /* Purely graphic info */
  typedef struct {
  	int tw, th; /* tty width and height */
-@@ -207,6 +209,7 @@ static DC dc;
+@@ -214,6 +217,7 @@ static DC dc;
  static XWindow xw;
  static XSelection xsel;
  static TermWindow win;
@@ -197,25 +212,22 @@ index fafc7e5..6f41d99 100644
  
  /* Font Ring Cache */
  enum {
-@@ -417,11 +420,13 @@ bpress(XEvent *e)
- 		return;
- 	}
- 
--	for (ms = mshortcuts; ms < mshortcuts + LEN(mshortcuts); ms++) {
--		if (e->xbutton.button == ms->b
--				&& match(ms->mask, e->xbutton.state)) {
--			ttywrite(ms->s, strlen(ms->s), 1);
--			return;
-+	if (IS_ALTSCREEN) {
-+		for (ms = mshortcuts; ms < mshortcuts + LEN(mshortcuts); ms++) {
-+			if (e->xbutton.button == ms->b
-+					&& match(ms->mask, e->xbutton.state)) {
-+				ttywrite(ms->s, strlen(ms->s), 1);
-+				return;
-+			}
+@@ -422,12 +426,13 @@ int
+ mouseaction(XEvent *e, uint release)
+ {
+ 	MouseShortcut *ms;
+-
++        
+ 	for (ms = mshortcuts; ms < mshortcuts + LEN(mshortcuts); ms++) {
+ 		if (ms->release == release &&
+ 		    ms->button == e->xbutton.button &&
+ 		    (match(ms->mod, e->xbutton.state) ||  /* exact or forced */
+-		     match(ms->mod, e->xbutton.state & ~forcemousemod))) {
++		     match(ms->mod, e->xbutton.state & ~forcemousemod)) &&
++                    IS_ALTSCREEN == ms->onlyaltscreen) {
+ 			ms->func(&(ms->arg));
+ 			return 1;
  		}
- 	}
- 
 -- 
-2.17.2 (Apple Git-113)
+2.21.0 (Apple Git-122.2)
 
