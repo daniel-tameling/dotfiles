@@ -107,6 +107,9 @@ setopt nomatch
 # extended globbing
 setopt extended_glob
 
+# don't append indicators for file types during completion
+unsetopt list_types
+
 # get battery charge
 battery_status () {
     local bat_status bat_color
