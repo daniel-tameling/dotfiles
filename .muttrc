@@ -13,6 +13,7 @@ bind index,pager X sync-folder-mailbox
 
 
 set move = no
+set resolve = "no"
 
 set sendmail="/opt/local/bin/msmtp --read-envelope-from" # choose the SMTP server according to the from field
 set edit_hdrs=yes
