@@ -12,7 +12,7 @@ bind index,pager x sync-mailbox
 bind index,pager X sync-folder-mailbox
 
 
-set move = no
+set move = "no"
 set resolve = "no"
 
 set sendmail="/opt/local/bin/msmtp --read-envelope-from" # choose the SMTP server according to the from field
@@ -62,7 +62,8 @@ bind index,pager ts noop
 bind index,pager ta  parent-message
 bind index,pager tsa root-message
 bind index,pager tb  break-thread
-bind index,pager td  delete-thread
+#bind index,pager td  delete-thread
+macro index,pager td '<delete-thread><next-thread>' 'delete thread and move to next'
 bind index,pager tsd delete-subthread
 bind index,pager tl  link-threads
 bind index,pager tr  read-thread
@@ -131,7 +132,8 @@ bind index,pager W copy-message
 bind index,pager w save-message
 bind index,pager C recall-message
 bind index,pager \ec resend-message
-bind index,pager d delete-message
+# bind index,pager d delete-message
+macro index,pager d '<delete-message><next-entry>' 'delete message and move to next'
 bind index D delete-pattern
 bind index,pager u undelete-message
 bind index U undelete-pattern
@@ -215,6 +217,7 @@ unset markers
 auto_view text/html
 alternative_order text/plain text/enriched text/html
 set mailcap_path = ~/.mutt/mailcap
+macro attach 'V' "<pipe-entry>iconv -c --to-code=UTF-8 > ~/.mutt/mail.html<enter><shell-escape>open ~/.mutt/mail.html<enter>"
 
 set tmpdir           = ~/.mutt/tmp          # where to keep temp files
 set print_command="~/.mutt/print-pdf-wrapper.sh"
