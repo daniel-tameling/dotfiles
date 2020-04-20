@@ -1,7 +1,7 @@
-From 1f4c23a820ef258cd4e72422fa87e0a6bbfb12c2 Mon Sep 17 00:00:00 2001
+From 45434e37ef3720e04ec512a046a76fc636fd79c7 Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Sat, 2 Feb 2019 17:13:49 +0100
-Subject: [PATCH 8/8] adds a counter when using scrollback
+Subject: [PATCH 8/9] adds a counter when using scrollback
 
 ---
  st.c | 18 ++++++++++++++++--
@@ -10,7 +10,7 @@ Subject: [PATCH 8/8] adds a counter when using scrollback
  3 files changed, 51 insertions(+), 7 deletions(-)
 
 diff --git a/st.c b/st.c
-index 19e59aa..cadddf6 100644
+index ba90866..76b0fa0 100644
 --- a/st.c
 +++ b/st.c
 @@ -194,6 +194,7 @@ static int cmdfd;
@@ -21,7 +21,7 @@ index 19e59aa..cadddf6 100644
  
  static uchar utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
  static uchar utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
-@@ -804,9 +805,9 @@ void
+@@ -817,9 +818,9 @@ void
  ttywrite(const char *s, size_t n, int may_echo)
  {
  	const char *next;
@@ -33,7 +33,7 @@ index 19e59aa..cadddf6 100644
  
  	if (may_echo && IS_SET(MODE_ECHO))
  		twrite(s, n, 1);
-@@ -1001,7 +1002,14 @@ treset(void)
+@@ -1014,7 +1015,14 @@ treset(void)
  void
  tnew(int col, int row)
  {
@@ -48,16 +48,16 @@ index 19e59aa..cadddf6 100644
  	tresize(col, row);
  	treset();
  }
-@@ -2599,6 +2607,8 @@ drawregion(int x1, int y1, int x2, int y2)
- void
+@@ -2614,6 +2622,8 @@ void
  draw(void)
  {
+ 	int cx = term.c.x, ocx = term.ocx, ocy = term.ocy;
 +        char str[maxhistcounterdigits+1];
 +        int digits;
- 	int cx = term.c.x;
  
  	if (!xstartdraw())
-@@ -2616,6 +2626,10 @@ draw(void)
+ 		return;
+@@ -2630,6 +2640,10 @@ draw(void)
  	if (term.scr == 0)
  		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
  				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
@@ -65,11 +65,11 @@ index 19e59aa..cadddf6 100644
 +                digits = snprintf(str, maxhistcounterdigits+1, "[%d]", term.scr);
 +                xdrawhistcounter(str, digits, term.col - digits);
 +        }
- 	term.ocx = cx, term.ocy = term.c.y;
+ 	term.ocx = cx;
+         term.ocy = term.c.y;
  	xfinishdraw();
- 	xximspot(term.ocx, term.ocy);
 diff --git a/st.h b/st.h
-index bf3773c..260b9a6 100644
+index dcab575..f40171e 100644
 --- a/st.h
 +++ b/st.h
 @@ -155,6 +155,8 @@ void *xmalloc(size_t);
@@ -80,12 +80,12 @@ index bf3773c..260b9a6 100644
 +
  /* config.h globals */
  extern char *utmp;
- extern char *stty_args;
+ extern char *scroll;
 diff --git a/x.c b/x.c
-index 06d5101..6ca627e 100644
+index 62bb081..39fbc7c 100644
 --- a/x.c
 +++ b/x.c
-@@ -417,6 +417,9 @@ mousereport(XEvent *e)
+@@ -423,6 +423,9 @@ mousereport(XEvent *e)
  			+ ((state & ControlMask) ? 16 : 0);
  	}
  
@@ -95,7 +95,7 @@ index 06d5101..6ca627e 100644
  	if (IS_SET(MODE_MOUSESGR)) {
  		len = snprintf(buf, sizeof(buf), "\033[<%d;%d;%d%c",
  				button, x+1, y+1,
-@@ -506,6 +509,9 @@ selnotify(XEvent *e)
+@@ -527,6 +530,9 @@ selnotify(XEvent *e)
  	uchar *data, *last, *repl;
  	Atom type, incratom, property = None;
  
@@ -105,7 +105,7 @@ index 06d5101..6ca627e 100644
  	incratom = XInternAtom(xw.dpy, "INCR", 0);
  
  	ofs = 0;
-@@ -703,11 +709,13 @@ brelease(XEvent *e)
+@@ -724,11 +730,13 @@ brelease(XEvent *e)
                                          _exit(127);
                                  }
                          } else {
@@ -124,7 +124,7 @@ index 06d5101..6ca627e 100644
                          }
                  }
          }        
-@@ -1472,6 +1480,18 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
+@@ -1513,6 +1521,18 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
  	XftDrawSetClip(xw.draw, 0);
  }
  
@@ -143,7 +143,7 @@ index 06d5101..6ca627e 100644
  void
  xdrawglyph(Glyph g, int x, int y)
  {
-@@ -1787,6 +1807,7 @@ kpress(XEvent *ev)
+@@ -1832,6 +1852,7 @@ kpress(XEvent *ev)
  	Status status;
  	Shortcut *bp;
          Specialchar *sc;
@@ -151,7 +151,7 @@ index 06d5101..6ca627e 100644
  
  	if (IS_SET(MODE_KBDLOCK))
  		return;
-@@ -1800,6 +1821,13 @@ kpress(XEvent *ev)
+@@ -1848,6 +1869,13 @@ kpress(XEvent *ev)
  		}
  	}
  
@@ -166,5 +166,5 @@ index 06d5101..6ca627e 100644
  	for (sc = specialchars; sc < specialchars + LEN(specialchars); sc++) {
  		if (ksym == sc->keysym && match(sc->mod, e->state)) {
 -- 
-2.21.0 (Apple Git-122.2)
+2.24.1 (Apple Git-126)
 

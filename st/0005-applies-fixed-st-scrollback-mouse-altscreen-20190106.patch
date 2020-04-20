@@ -1,21 +1,21 @@
-From 7c03d8ca332cf66437dfa61b04ee39a926b1ba47 Mon Sep 17 00:00:00 2001
+From a9bdc4a69a17a4d4bf23b8f876a5f73f4eb7383c Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Wed, 30 Jan 2019 20:31:00 +0100
-Subject: [PATCH 5/8] applies fixed
+Subject: [PATCH 5/9] applies fixed
  st-scrollback-mouse-altscreen-20190106-e23acb9.diff
 
 ---
  config.def.h | 10 +++++-----
  st.c         | 44 +-------------------------------------------
  st.h         | 42 ++++++++++++++++++++++++++++++++++++++++++
- x.c          |  9 +++++++--
- 4 files changed, 55 insertions(+), 50 deletions(-)
+ x.c          |  8 +++++++-
+ 4 files changed, 55 insertions(+), 49 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index 819e5a2..84063d9 100644
+index 582dbe8..11bbd7b 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -162,12 +162,12 @@ static uint forcemousemod = ShiftMask;
+@@ -164,12 +164,12 @@ static uint forcemousemod = ShiftMask;
   * Beware that overloading Button1 will disable the selection.
   */
  static MouseShortcut mshortcuts[] = {
@@ -34,7 +34,7 @@ index 819e5a2..84063d9 100644
  
  /* Internal keyboard shortcuts. */
 diff --git a/st.c b/st.c
-index 503bd90..87a562d 100644
+index 3842632..be09fdf 100644
 --- a/st.c
 +++ b/st.c
 @@ -35,7 +35,6 @@
@@ -117,7 +117,7 @@ index 503bd90..87a562d 100644
  static CSIEscape csiescseq;
  static STREscape strescseq;
 diff --git a/st.h b/st.h
-index 1332cf1..bf3773c 100644
+index b9a4eeb..dcab575 100644
 --- a/st.h
 +++ b/st.h
 @@ -19,6 +19,18 @@
@@ -177,7 +177,7 @@ index 1332cf1..bf3773c 100644
  	int i;
  	uint ui;
 diff --git a/x.c b/x.c
-index ebc341f..fd17fd7 100644
+index bf76311..148bf8d 100644
 --- a/x.c
 +++ b/x.c
 @@ -34,6 +34,7 @@ typedef struct {
@@ -204,7 +204,7 @@ index ebc341f..fd17fd7 100644
  /* Purely graphic info */
  typedef struct {
  	int tw, th; /* tty width and height */
-@@ -214,6 +217,7 @@ static DC dc;
+@@ -220,6 +223,7 @@ static DC dc;
  static XWindow xw;
  static XSelection xsel;
  static TermWindow win;
@@ -212,22 +212,24 @@ index ebc341f..fd17fd7 100644
  
  /* Font Ring Cache */
  enum {
-@@ -422,12 +426,13 @@ int
- mouseaction(XEvent *e, uint release)
+@@ -440,6 +444,7 @@ mouseaction(XEvent *e, uint release)
  {
  	MouseShortcut *ms;
--
-+        
- 	for (ms = mshortcuts; ms < mshortcuts + LEN(mshortcuts); ms++) {
+ 
++
+ 	/* ignore Button<N>mask for Button<N> - it's set on release */
+ 	uint state = e->xbutton.state & ~buttonmask(e->xbutton.button);
+ 
+@@ -447,7 +452,8 @@ mouseaction(XEvent *e, uint release)
  		if (ms->release == release &&
  		    ms->button == e->xbutton.button &&
- 		    (match(ms->mod, e->xbutton.state) ||  /* exact or forced */
--		     match(ms->mod, e->xbutton.state & ~forcemousemod))) {
-+		     match(ms->mod, e->xbutton.state & ~forcemousemod)) &&
+ 		    (match(ms->mod, state) ||  /* exact or forced */
+-		     match(ms->mod, state & ~forcemousemod))) {
++		     match(ms->mod, state & ~forcemousemod)) &&
 +                    IS_ALTSCREEN == ms->onlyaltscreen) {
  			ms->func(&(ms->arg));
  			return 1;
  		}
 -- 
-2.21.0 (Apple Git-122.2)
+2.24.1 (Apple Git-126)
 

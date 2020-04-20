@@ -1,7 +1,7 @@
-From 6825b54b749c07b4625c3069e6d73a6370584594 Mon Sep 17 00:00:00 2001
+From d99d4eed0bb6e208edf00a99b02a7ea82e1b95ce Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Wed, 30 Jan 2019 22:01:22 +0100
-Subject: [PATCH 7/8] adds plumber
+Subject: [PATCH 7/9] adds plumber
 
 ---
  st.c | 27 +++++++++++++++------------
@@ -9,7 +9,7 @@ Subject: [PATCH 7/8] adds plumber
  2 files changed, 48 insertions(+), 12 deletions(-)
 
 diff --git a/st.c b/st.c
-index 87a562d..19e59aa 100644
+index be09fdf..ba90866 100644
 --- a/st.c
 +++ b/st.c
 @@ -9,6 +9,7 @@
@@ -29,7 +29,7 @@ index 87a562d..19e59aa 100644
  
  static uchar utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
  static uchar utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
-@@ -676,18 +679,18 @@ sigchld(int a)
+@@ -684,18 +687,18 @@ sigchld(int a)
  {
  	int stat;
  	pid_t p;
@@ -61,7 +61,7 @@ index 87a562d..19e59aa 100644
  
  void
 diff --git a/x.c b/x.c
-index 9819c6a..06d5101 100644
+index 7bf5a77..62bb081 100644
 --- a/x.c
 +++ b/x.c
 @@ -5,6 +5,7 @@
@@ -72,7 +72,7 @@ index 9819c6a..06d5101 100644
  #include <time.h>
  #include <unistd.h>
  #include <libgen.h>
-@@ -224,6 +225,8 @@ static XWindow xw;
+@@ -230,6 +231,8 @@ static XWindow xw;
  static XSelection xsel;
  static TermWindow win;
  extern Term term;
@@ -81,7 +81,7 @@ index 9819c6a..06d5101 100644
  
  /* Font Ring Cache */
  enum {
-@@ -676,6 +679,8 @@ xsetsel(char *str)
+@@ -697,6 +700,8 @@ xsetsel(char *str)
  void
  brelease(XEvent *e)
  {
@@ -90,7 +90,7 @@ index 9819c6a..06d5101 100644
  	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forcemousemod)) {
  		mousereport(e);
  		return;
-@@ -685,6 +690,27 @@ brelease(XEvent *e)
+@@ -706,6 +711,27 @@ brelease(XEvent *e)
  		return;
  	if (e->xbutton.button == Button1)
  		mousesel(e, 1);
@@ -118,7 +118,7 @@ index 9819c6a..06d5101 100644
  }
  
  void
-@@ -1878,6 +1904,13 @@ run(void)
+@@ -1926,6 +1952,13 @@ run(void)
  				continue;
  			die("select failed: %s\n", strerror(errno));
  		}
@@ -133,5 +133,5 @@ index 9819c6a..06d5101 100644
  			ttyread();
  			if (blinktimeout) {
 -- 
-2.21.0 (Apple Git-122.2)
+2.24.1 (Apple Git-126)
 

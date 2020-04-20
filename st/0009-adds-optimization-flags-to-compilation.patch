@@ -1,0 +1,27 @@
+From 9b0d95469ac43064b8d62395307313dd5a1417de Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Sat, 14 Dec 2019 14:52:58 +0100
+Subject: [PATCH 9/9] adds optimization flags to compilation
+
+---
+ config.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/config.mk b/config.mk
+index a0af50e..8c452bc 100644
+--- a/config.mk
++++ b/config.mk
+@@ -22,8 +22,8 @@ LIBS = -L$(X11LIB) -lm -lX11 -lutil -lXft \
+ 
+ # flags
+ STCPPFLAGS = -DVERSION=\"$(VERSION)\" -D_XOPEN_SOURCE=600
+-STCFLAGS = $(INCS) $(STCPPFLAGS) $(CPPFLAGS) $(CFLAGS)
+-STLDFLAGS = $(LIBS) $(LDFLAGS)
++STCFLAGS = $(INCS) $(STCPPFLAGS) $(CPPFLAGS) $(CFLAGS) -flto -std=c11 -O2 -Wall
++STLDFLAGS = $(LIBS) $(LDFLAGS) -flto -std=c11 -O2
+ 
+ # OpenBSD:
+ #CPPFLAGS = -DVERSION=\"$(VERSION)\" -D_XOPEN_SOURCE=600 -D_BSD_SOURCE
+-- 
+2.24.1 (Apple Git-126)
+

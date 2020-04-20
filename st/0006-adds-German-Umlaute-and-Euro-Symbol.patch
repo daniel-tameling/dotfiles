@@ -1,7 +1,7 @@
-From 39194082d0bd4c371c9b6ddb62a5ad68f6e803ff Mon Sep 17 00:00:00 2001
+From 52bf500f9577dec2e2caef9499f37c4fec145688 Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Sat, 14 Dec 2019 14:21:30 +0100
-Subject: [PATCH 6/8] =?UTF-8?q?adds=20German=20Umlaute,=20=C3=9F,=20and=20?=
+Subject: [PATCH 6/9] =?UTF-8?q?adds=20German=20Umlaute,=20=C3=9F,=20and=20?=
  =?UTF-8?q?Euro-Symbol?=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,10 +13,10 @@ Content-Transfer-Encoding: 8bit
  2 files changed, 27 insertions(+)
 
 diff --git a/config.def.h b/config.def.h
-index 84063d9..20f1079 100644
+index 11bbd7b..3748ba2 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -192,6 +192,18 @@ static Shortcut shortcuts[] = {
+@@ -194,6 +194,18 @@ static Shortcut shortcuts[] = {
  	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
  };
  
@@ -36,7 +36,7 @@ index 84063d9..20f1079 100644
   * Special keys (change & recompile st.info accordingly)
   *
 diff --git a/x.c b/x.c
-index fd17fd7..9819c6a 100644
+index 148bf8d..7bf5a77 100644
 --- a/x.c
 +++ b/x.c
 @@ -28,6 +28,12 @@ typedef struct {
@@ -52,7 +52,7 @@ index fd17fd7..9819c6a 100644
  typedef struct {
  	uint mod;
  	uint button;
-@@ -1754,6 +1760,7 @@ kpress(XEvent *ev)
+@@ -1799,6 +1805,7 @@ kpress(XEvent *ev)
  	Rune c;
  	Status status;
  	Shortcut *bp;
@@ -60,7 +60,7 @@ index fd17fd7..9819c6a 100644
  
  	if (IS_SET(MODE_KBDLOCK))
  		return;
-@@ -1767,6 +1774,14 @@ kpress(XEvent *ev)
+@@ -1815,6 +1822,14 @@ kpress(XEvent *ev)
  		}
  	}
  
@@ -76,5 +76,5 @@ index fd17fd7..9819c6a 100644
  	if ((customkey = kmap(ksym, e->state))) {
  		ttywrite(customkey, strlen(customkey), 1);
 -- 
-2.21.0 (Apple Git-122.2)
+2.24.1 (Apple Git-126)
 
