@@ -209,14 +209,18 @@ zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 ## case-insensitive (all),partial-word and then substring completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' menu select=long
+# zstyle ':completion:*' menu select=long
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,cputime,comm'
+zstyle ':completion:*:*:top:*:*' menu yes=long select interactive
+# linux version
+# zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+# freebsd version
+# zstyle ':completion:*:kill:*' command 'ps -U $USER -o pid,%cpu,tty,cputime,command'
 
 # http://zshwiki.org/home/zle/bindkeys ;to make keys do what they are supposed to
 # create a zkbd compatible hash;
