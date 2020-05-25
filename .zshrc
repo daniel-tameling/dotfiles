@@ -347,3 +347,5 @@ function contact(){
 function allcontacts(){
     cat ~/contacts
 }
+
+function calc() { python3 -c "print($@)" }
