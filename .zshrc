@@ -335,3 +335,15 @@ function plumber() {
          open "$@"
     fi    
 }
+
+function contact(){
+    if [[ "$@" == "" ]]; then
+       cat ~/contacts
+    else
+        awk 'match(tolower($1), tolower('\""$@"\"')) {print $2}' ~/contacts
+    fi
+}
+
+function allcontacts(){
+    cat ~/contacts
+}
