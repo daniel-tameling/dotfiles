@@ -1,24 +1,22 @@
-From c907d9dcb254029c5786fd9d73980993c45c5f73 Mon Sep 17 00:00:00 2001
+From 9dc8f6b753723b4a3b5eccb941efbf8b2b0b61cb Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 12 Sep 2019 21:36:56 +0200
-Subject: [PATCH 4/6] don't leave pager if prev/next-entry on first/last
+Subject: [PATCH 4/9] don't leave pager if prev/next-entry on first/last
  message
 
 ---
- curs_main.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ curs_main.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/curs_main.c b/curs_main.c
-index 4158e239..75076edc 100644
+index fee0a34c..4343a2eb 100644
 --- a/curs_main.c
 +++ b/curs_main.c
-@@ -1593,7 +1593,12 @@ int mutt_index_menu (void)
- 	if (menu->current >= Context->vcount - 1)
+@@ -1631,6 +1631,11 @@ int mutt_index_menu (void)
  	{
- 	  if (menu->menu == MENU_MAIN)
--	    mutt_error _("You are on the last message.");
-+            mutt_error _("You are on the last message.");
-+          else if (menu->menu == MENU_PAGER)
+ 	  if (!in_pager)
+ 	    mutt_error _("You are on the last message.");
++          else
 +          {
 +            op = OP_DISPLAY_MESSAGE;
 +            continue;
@@ -26,9 +24,9 @@ index 4158e239..75076edc 100644
  	  break;
  	}
  	if ((menu->current = ci_next_undeleted (menu->current)) == -1)
-@@ -1619,6 +1624,11 @@ int mutt_index_menu (void)
+@@ -1656,6 +1661,11 @@ int mutt_index_menu (void)
  	{
- 	  if (menu->menu == MENU_MAIN)
+ 	  if (!in_pager)
  	    mutt_error _("You are on the last message.");
 +          else if (menu->menu == MENU_PAGER)
 +          {
@@ -38,7 +36,7 @@ index 4158e239..75076edc 100644
  	  break;
  	}
  	menu->current++;
-@@ -1638,6 +1648,11 @@ int mutt_index_menu (void)
+@@ -1675,6 +1685,11 @@ int mutt_index_menu (void)
  	if (menu->current < 1)
  	{
  	  mutt_error _("You are on the first message.");
@@ -50,14 +48,14 @@ index 4158e239..75076edc 100644
  	  break;
  	}
  	if ((menu->current = ci_previous_undeleted (menu->current)) == -1)
-@@ -1661,7 +1676,13 @@ int mutt_index_menu (void)
+@@ -1698,7 +1713,13 @@ int mutt_index_menu (void)
          CHECK_VISIBLE;
  	if (menu->current < 1)
  	{
--	  if (menu->menu == MENU_MAIN) mutt_error _("You are on the first message.");
-+	  if (menu->menu == MENU_MAIN)
+-	  if (!in_pager) mutt_error _("You are on the first message.");
++	  if (!in_pager)
 +            mutt_error _("You are on the first message.");
-+          else if (menu->menu == MENU_PAGER)
++          else
 +          {
 +            op = OP_DISPLAY_MESSAGE;
 +            continue;
@@ -66,5 +64,5 @@ index 4158e239..75076edc 100644
  	}
  	menu->current--;
 -- 
-2.20.1 (Apple Git-117)
+2.24.3 (Apple Git-128)
 

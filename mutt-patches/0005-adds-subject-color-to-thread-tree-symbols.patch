@@ -1,14 +1,14 @@
-From c9e54a0a1097533c3ef77d041d1e220b064dac56 Mon Sep 17 00:00:00 2001
+From 0fd077379b1750e72fcc0b8d60a6d94b91a16d5b Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 12 Sep 2019 21:37:42 +0200
-Subject: [PATCH 5/6] adds subject color to thread tree symbols
+Subject: [PATCH 5/9] adds subject color to thread tree symbols
 
 ---
  menu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/menu.c b/menu.c
-index df798c98..f7258a57 100644
+index 969fff19..e5cc2921 100644
 --- a/menu.c
 +++ b/menu.c
 @@ -48,7 +48,7 @@ static void print_enriched_string (int attr, unsigned char *s, int do_color)
@@ -21,5 +21,5 @@ index df798c98..f7258a57 100644
        {
  	switch (*s)
 -- 
-2.20.1 (Apple Git-117)
+2.24.3 (Apple Git-128)
 

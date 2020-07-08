@@ -1,0 +1,131 @@
+From 37db7261c1f888755b04e1fc65e33d32db95e6d4 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Sun, 15 Dec 2019 10:35:26 +0100
+Subject: [PATCH 8/9] adds my own formatting to index_format
+
+no need any more to pipe something to an external tool (now much faster)
+- add %g for my own date formatting (code feels pretty hacky)
+- add %x which does something like %?M?<%M> ?%s in one field
+- hardcoded dependency on terminal width for length of %F and %x
+---
+ hdrline.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 1 deletion(-)
+
+diff --git a/hdrline.c b/hdrline.c
+index eb441b02..b6561c4b 100644
+--- a/hdrline.c
++++ b/hdrline.c
+@@ -431,6 +431,63 @@ hdr_format_str (char *dest,
+     }
+     break;
+ 
++    case 'g':
++
++    /* preprocess $date_format to handle %Z */
++    {
++      struct tm *tm, now;
++      char *tmp;
++      time_t T;
++      int found = 0;
++
++      tm = localtime (&hdr->date_sent);
++      T = time (NULL);
++      localtime_r (&T, &now);
++
++      if (tm->tm_year == now.tm_year && tm->tm_yday == now.tm_yday)
++      {
++        strftime (buf2, sizeof (buf2), "Today       %R", tm);
++        found = 1;
++      }
++      else
++      {
++        now.tm_mday--;
++        mktime(&now);
++        if (tm->tm_year == now.tm_year && tm->tm_yday == now.tm_yday)
++        {
++          strftime (buf2, sizeof (buf2), "Yesterday   %R", tm);
++          found = 1;
++        }
++        else
++        {
++          for (int i =0; i<5; i++)
++          {
++            now.tm_mday--;
++            mktime(&now);
++            if (tm->tm_year == now.tm_year && tm->tm_yday == now.tm_yday)
++            {
++              size_t len = strftime (buf2, sizeof (buf2), "%A", tm);
++              tmp = buf2 + len;
++              for (int j = 0; j < 12 - len; j++)
++                      tmp[j] = ' ';
++              tmp += 12 - len;
++              strftime (tmp, sizeof (buf2) - 12, "%R", tm);
++              found = 1;
++            }
++          }
++        }
++      }
++      if (!found)
++      {
++        if (tm->tm_year != now.tm_year)
++          strftime (buf2, sizeof (buf2), "%a %d. %b  %Y", tm);
++        else
++          strftime (buf2, sizeof (buf2), "%a %d. %b %R", tm);
++      }
++      mutt_format_s (dest, destlen, prefix, buf2);
++    }
++    break;
++
+     case 'e':
+       snprintf (fmt, sizeof (fmt), "%%%sd", prefix);
+       snprintf (dest, destlen, fmt, mutt_messages_in_thread(ctx, hdr, 1));
+@@ -453,6 +510,14 @@ hdr_format_str (char *dest,
+       break;
+ 
+     case 'F':
++    {
++      char prefix[SHORT_STRING];
++      int addr_width;
++      addr_width = (MuttIndexWindow->cols - 40) / 3;
++      if (addr_width > 0)
++        snprintf(prefix, sizeof(prefix), "-%d.%d", addr_width, addr_width);
++      else
++        snprintf(prefix, sizeof(prefix), "");
+       if (!optional)
+       {
+         make_from (hdr->env, buf2, sizeof (buf2), 0);
+@@ -460,7 +525,8 @@ hdr_format_str (char *dest,
+       }
+       else if (mutt_addr_is_user (hdr->env->from))
+         optional = 0;
+-      break;
++    }
++    break;
+ 
+     case 'H':
+       /* (Hormel) spam score */
+@@ -704,6 +770,21 @@ hdr_format_str (char *dest,
+       mutt_format_s (dest, destlen, prefix, buf2);
+       break;
+ 
++    case 'x':
++    {
++      /* similar to case '@' */
++      char prefix[SHORT_STRING];
++      int subject_width;
++      mutt_FormatString (buf2, sizeof (buf2), col, cols, "%?M?<%M> ?%s", hdr_format_str, (unsigned long) hfi, flags);
++      subject_width = MuttIndexWindow->cols - 40 - (MuttIndexWindow->cols - 40) / 3;
++      if (subject_width > 0)
++        snprintf(prefix, sizeof(prefix), "-%d.%d", subject_width, subject_width);
++      else
++        snprintf(prefix, sizeof(prefix), "");
++      mutt_format_s_tree (dest, destlen, prefix, buf2);
++    }
++    break;
++
+     case 'X':
+     {
+       int count = mutt_count_body_parts (ctx, hdr);
+-- 
+2.24.3 (Apple Git-128)
+

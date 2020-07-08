@@ -1,7 +1,7 @@
-From 4892cd0a1a853716223b306e463e3261dfd71479 Mon Sep 17 00:00:00 2001
+From 6c7340fa0d838b967272ea19e87a57528b2c7390 Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 12 Sep 2019 21:38:13 +0200
-Subject: [PATCH 6/6] adds text to highlight the end of the displayed msg in
+Subject: [PATCH 6/9] adds text to highlight the end of the displayed msg in
  pager view
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 6/6] adds text to highlight the end of the displayed msg in
  1 file changed, 14 insertions(+)
 
 diff --git a/pager.c b/pager.c
-index cf3193f2..f52b9ba2 100644
+index a183d13d..ee4af88b 100644
 --- a/pager.c
 +++ b/pager.c
-@@ -1824,6 +1824,20 @@ static void pager_menu_redraw (MUTTMENU *pager_menu)
+@@ -1848,6 +1848,20 @@ static void pager_menu_redraw (MUTTMENU *pager_menu)
      } while (rd->force_redraw);
  
      SETCOLOR (MT_COLOR_TILDE);
@@ -34,5 +34,5 @@ index cf3193f2..f52b9ba2 100644
      {
        mutt_window_clrtoeol (rd->pager_window);
 -- 
-2.20.1 (Apple Git-117)
+2.24.3 (Apple Git-128)
 

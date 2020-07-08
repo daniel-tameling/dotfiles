@@ -1,0 +1,35 @@
+From efa2417312fa6f93ee577f7808beb807d1e6a2c3 Mon Sep 17 00:00:00 2001
+From: Daniel Tameling <tamelingdaniel@gmail.com>
+Date: Wed, 8 Jul 2020 20:59:29 +0200
+Subject: [PATCH 9/9] comments DOTLOCK_GROUP='mail' out in configure.ac
+
+---
+ configure.ac | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 661e6ccd..efb49383 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -652,13 +652,13 @@ then
+ fi
+ AC_SUBST(docdir)
+ 
+-if test x$mutt_cv_setgid = xyes; then
+-        DOTLOCK_GROUP='mail'
+-        DOTLOCK_PERMISSION=2755
+-else
++dnl if test x$mutt_cv_setgid = xyes; then
++dnl         DOTLOCK_GROUP='mail'
++dnl         DOTLOCK_PERMISSION=2755
++dnl else
+         DOTLOCK_GROUP=''
+         DOTLOCK_PERMISSION=755
+-fi
++dnl fi
+ AC_SUBST(DOTLOCK_GROUP)
+ AC_SUBST(DOTLOCK_PERMISSION)
+ 
+-- 
+2.24.3 (Apple Git-128)
+
