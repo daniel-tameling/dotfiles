@@ -28,7 +28,23 @@
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t)
  
-(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
 (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-c o") 'helm-occur)
+(global-set-key (kbd "M-y") #'helm-show-kill-ring)
+(global-set-key (kbd "C-c o") #'helm-occur)
+
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(setq helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match    t)
+
+(defun helm-buffers-sort-transformer@star-buffers-last (_ candidates _)
+;;    candidates)
+  (sort candidates
+        (lambda (s1 s2)
+          (cond ((string-prefix-p "*" s1) nil)
+                ((string-prefix-p "*" s2) t)
+                (t (< (string-width s1) (string-width s2)))
+          ))))
+(advice-add 'helm-buffers-sort-transformer :around 'helm-buffers-sort-transformer@star-buffers-last)
