@@ -31,4 +31,4 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "C-c o") 'helm-occur)
