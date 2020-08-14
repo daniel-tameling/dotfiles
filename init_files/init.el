@@ -12,6 +12,9 @@
 ;; recognize one space after . as sentence end
 (setq sentence-end-double-space nil)
 
+;; activate mouse in terminal
+(xterm-mouse-mode t)
+
 ;; don't indent previous line
 (setq-default electric-indent-inhibit t)
 
@@ -20,6 +23,10 @@
 
 ;set command key to control
 (setq mac-command-modifier 'control) ; use 'meta for meta key
+
+;; kill whole line
+(global-set-key (kbd "M-k") 'kill-whole-line)
+
 
 ;; increase font size for graphic displays
 (if (display-graphic-p)
