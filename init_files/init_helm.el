@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+;(require 'helm)
 (require 'helm-config)
  
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
@@ -7,20 +8,30 @@
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
-(eval-after-load 'helm
-  '(progn
-     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-     (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-     (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(helm-mode t)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(setq helm-autoresize-max-height 30)
+(setq helm-autoresize-min-height 20)
+(helm-autoresize-mode 1)
+
+;; (eval-after-load 'helm
+;;   '(progn
+;;      (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;;      (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+;;      (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
      
-     (setq helm-autoresize-max-height 30)
-     (setq helm-autoresize-min-height 20)
-     (helm-autoresize-mode 1))) 
+;;      (setq helm-autoresize-max-height 30)
+;;      (setq helm-autoresize-min-height 20)
+;;      (helm-autoresize-mode 1))) 
  
-(run-with-idle-timer 1 nil 'my-activate-helm-mode)
-(defun my-activate-helm-mode ()
-  ""
-  (helm-mode t))
+;; ;(run-with-idle-timer 1 nil (helm-mode 1))
+;; (run-with-idle-timer 1 nil 'my-activate-helm-mode)
+;; (defun my-activate-helm-mode ()
+;;   ""
+;;   (helm-mode t))
 
 (setq helm-split-window-inside-p           t ; open helm buffer inside current window, not occupy whole other window
       helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.

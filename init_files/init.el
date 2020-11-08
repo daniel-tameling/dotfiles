@@ -27,6 +27,16 @@
 ;; kill whole line
 (global-set-key (kbd "M-k") 'kill-whole-line)
 
+(menu-bar-mode -1)
+
+(setq neo-theme 'arrow)
+
+(which-key-mode)
+
+;; to avoid ?? as line number in mode-line for long lines
+;; (see https://emacs.stackexchange.com/questions/3824/what-piece-of-code-in-emacs-makes-line-number-mode-print-as-line-number-i/3827)
+(setq line-number-display-limit-width 2000000)
+
 
 ;; increase font size for graphic displays
 (if (display-graphic-p)
@@ -71,3 +81,28 @@
             (set-window-buffer-start-and-point w2 b1 s1 p1)))))))
 (global-set-key (kbd "C-c r") 'rotate-windows)
 (global-set-key (kbd "C-c e") (kbd "C-u -1 C-c r")) 
+
+;; ibuffer
+(require 'ibuf-ext)
+(add-to-list 'ibuffer-never-show-predicates "^\\*")
+
+;; Use human readable Size column instead of original one
+(define-ibuffer-column size-h
+  (:name "Size" :inline t)
+  (cond
+   ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0))=
+)
+   ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+   ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+   (t (format "%8d" (buffer-size)))))
+
+;; Modify the default ibuffer-formats
+(setq ibuffer-formats
+      '((mark modified read-only " "
+              (name 18 18 :left :elide)
+              " "
+              (size-h 9 -1 :right)
+              " "
+              (mode 16 16 :left :elide)
+              " "
+              filename-and-process)))

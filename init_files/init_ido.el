@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 (setq ido-enable-flex-matching t)
 (setq ido-auto-merge-work-directories-length -1)
-(setq ido-everywhere t)
+;; (setq ido-everywhere t)
 (ido-mode 1)
 (setq ido-max-dir-file-cache      10)
 (setq ido-max-work-directory-list 20)
