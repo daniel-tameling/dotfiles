@@ -1,0 +1,85 @@
+IMAPAccount GMX-account1
+Host imap.gmx.net
+User account1@gmx.de
+# UseIMAPS yes
+SSLType IMAPS
+SSLVersions TLSv1.2
+AuthMechs LOGIN 
+
+IMAPStore account1-remote
+Account GMX-account1
+
+MaildirStore gmx-account1-local
+Path ~/myMail/gmx/account1/
+Inbox ~/myMail/gmx/account1/Inbox
+SubFolders Verbatim
+
+Channel gmx-account1
+Master :account1-remote:
+Slave :gmx-account1-local:
+Patterns * !Entw* !Gel*
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmx-account1-entwuerfe
+Master :account1-remote:"Entw&APw-rfe"
+Slave :gmx-account1-local:"Entwürfe"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmx-account1-geloescht
+Master :account1-remote:"Gel&APY-scht"
+Slave :gmx-account1-local:"Gelöscht"
+Create Both
+Expunge Both
+SyncState *
+
+IMAPAccount GMX-account2
+Host imap.gmx.net
+User account2@gmx.de
+# UseIMAPS yes
+SSLType IMAPS
+SSLVersions TLSv1.2
+AuthMechs LOGIN 
+  
+IMAPStore account2-remote
+Account GMX-account2
+
+MaildirStore gmx-account2-local
+Path ~/myMail/gmx/account2/
+Inbox ~/myMail/gmx/account2/Inbox
+SubFolders Verbatim
+
+Channel gmx-account2
+Master :account2-remote:
+Slave :gmx-account2-local:
+Patterns * !Entw* !Gel*
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmx-account2-entwuerfe
+Master :account2-remote:"Entw&APw-rfe"
+Slave :gmx-account2-local:"Entwürfe"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmx-account2-geloescht
+Master :account2-remote:"Gel&APY-scht"
+Slave :gmx-account2-local:"Gelöscht"
+Create Both
+Expunge Both
+SyncState *
+
+Group account1
+Channel gmx-account1
+Channel gmx-account1-entwuerfe
+Channel gmx-account1-geloescht
+
+Group account2
+Channel gmx-account2
+Channel gmx-account2-entwuerfe
+Channel gmx-account2-geloescht
