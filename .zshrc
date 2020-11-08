@@ -83,9 +83,9 @@ alias fgrep='fgrep --color=auto'
 setopt correctall
 
 # command history
-export HISTFILE=$HOME/.zsh_history
-export HISTSIZE=50000
-export SAVEHIST=$HISTSIZE
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=50000
+SAVEHIST=$HISTSIZE
 setopt histignorealldups sharehistory
 setopt hist_ignore_space
 
@@ -100,6 +100,15 @@ setopt prompt_subst
 
 # put directories on directory stack
 setopt auto_pushd pushd_ignore_dups
+
+# cdr
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+zstyle ':completion:*:*:cdr:*:*' menu selection
+zstyle ':completion:*:*:cdr:*:*' recent-dirs-insert both
+zstyle ':completion:*:*:cdr:*:*' list-colors '=*=1;34'
+zstyle ':chpwd:*' recent-dirs-default true
+zstyle ':chpwd:*' recent-dirs-pushd true
 
 # if no matches are found, don't print zsh error
 setopt nomatch
@@ -353,3 +362,4 @@ function allcontacts(){
 }
 
 function calc() { python3 -c "print($@)" }
+export RIPGREP_CONFIG_PATH=~/.ripgreprc
