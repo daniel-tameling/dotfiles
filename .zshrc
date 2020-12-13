@@ -55,10 +55,7 @@ alias emacs='emacs -nw' #emacs not in x11 window
 alias mu4e='emacs -f mu4e'
 alias tst="tabbed -r 2 -c -p -1 st -w ''"
 
-woman () {
-    emacs -eval "(woman \"$1\")"
-}
-
+setopt rm_star_silent
 if [ -n "$PS1" ] ; then
   rm ()
   {
@@ -99,6 +96,11 @@ setopt prompt_subst
 # put directories on directory stack
 setopt auto_pushd pushd_ignore_dups
 
+# extended globbing
+setopt extended_glob
+
+# do not append */=>@| to file completion entries
+unsetopt LIST_TYPES
 # cdr
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 add-zsh-hook chpwd chpwd_recent_dirs
@@ -279,6 +281,12 @@ if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
    bindkey '3C' emacs-forward-word
 fi
 
+# to not complete ssh/scp from /etc/hosts spam list
+# https://www.zsh.org/mla/users/2013/msg00225.html
+getent() {
+    command getent "$@" | fgrep -v 0.0.0.0
+}
+
 # from zsh wiki
 my_extended_wordchars='*?_-.[]~=&;!#$%^(){}<>:@,\\';
 my_extended_wordchars_space="${my_extended_wordchars} "
@@ -334,6 +342,10 @@ bindkey "4C" forward-to-space
 bindkey "4D" backward-to-space
 bindkey "6C" forward-to-/
 bindkey "6D" backward-to-/
+
+woman () {
+    emacs -eval "(woman \"$1\")"
+}
 
 function plumber() {
     if [[ -f $@ ]]; then
