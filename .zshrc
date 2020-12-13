@@ -14,27 +14,25 @@
 if [[ -z "$PS1" || "$TERM" == "dumb" ]]; then
     return
 fi
-if [ "$TERM" != "dumb" ]; then
-    export LS_OPTIONS='--color=auto'
-    eval `dircolors ~/.dir_colors`
+export LS_OPTIONS='--color=auto'
+eval `dircolors ~/.dir_colors`
 
-    #export MANROFFOPT='-c'
-    export LESS_TERMCAP_mb=$(tput blink; tput setaf 39) # blink
-    export LESS_TERMCAP_md=$(tput bold; tput setaf 39) # bold
-    export LESS_TERMCAP_me=${TURNOFF}
-    export LESS_TERMCAP_so=$(tput smso; tput bold; tput setaf 214; tput setab 0) # stdout (cmdline & searches)
-    export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
-    export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 39) # underline
-    export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
-    export LESS_TERMCAP_mr=$(tput rev)
-    export LESS_TERMCAP_mh=$(tput dim)
-    export LESS_TERMCAP_ZN=$(tput ssubm)
-    export LESS_TERMCAP_ZV=$(tput rsubm)
-    export LESS_TERMCAP_ZO=$(tput ssupm)
-    export LESS_TERMCAP_ZW=$(tput rsupm)
+#export MANROFFOPT='-c'
+export LESS_TERMCAP_mb=$(tput blink; tput setaf 39) # blink
+export LESS_TERMCAP_md=$(tput bold; tput setaf 39) # bold
+export LESS_TERMCAP_me=${TURNOFF}
+export LESS_TERMCAP_so=$(tput smso; tput bold; tput setaf 214; tput setab 0) # stdout (cmdline & searches)
+export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 39) # underline
+export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+export LESS_TERMCAP_mr=$(tput rev)
+export LESS_TERMCAP_mh=$(tput dim)
+export LESS_TERMCAP_ZN=$(tput ssubm)
+export LESS_TERMCAP_ZV=$(tput rsubm)
+export LESS_TERMCAP_ZO=$(tput ssupm)
+export LESS_TERMCAP_ZW=$(tput rsupm)
 
-    export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=01;34:ln=01;34:bn=01;34:se=37'
-fi
+export GREP_COLORS='ms=01;33:mc=01;33:sl=:cx=:fn=01;34:ln=01;34:bn=01;34:se=37'
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
