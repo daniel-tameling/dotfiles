@@ -189,7 +189,7 @@ precmd_functions=(prmptcmd)
 precmd() {err=$?; print -nP '%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'`~/git-info.py`; if [[ $err != 0 ]]; then print -nP ' %F{red}[${err}]%f'; fi; print -n '\n'}
 precmd() {
     local err=$?
-    local git_status=$(~/go-git-info/go-git-info)
+    local git_status=$(~/dotfiles/go-git-info/go-git-info)
     local -a p
     p+='%F{green}[%n|%m]%f %F{yellow}%*%f %F{cyan}%~%f'
     if [[ -n $git_status ]]; then
