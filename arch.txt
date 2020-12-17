@@ -1,0 +1,43 @@
+grub:
+  grub theme:
+    https://github.com/Generator/Grub2-themes
+    https://github.com/vinceliuice/grub2-themes
+    I use the 2. with theme vimix
+  edit /etc/default/grub:
+    GRUB_TIMEOUT=0
+  and execute
+    grub-mkconfig -o /boot/grub/grub.cfg
+ucode updates:
+  sudo pacman -S amd-ucode
+  grub-mkconfig -o /boot/grub/grub.cfg
+lightdm + lightdm-gtk-greeter:
+  sudo pacman -S numlockx
+  groupadd -r autologin
+  gpasswd -a daniel autologin
+ntp:
+  sudo timedatectl set-ntp true
+  timedatectl status
+nvidia:
+  installed nvidia-lts and nvidia-settings
+  created /etc/modprobe.d/nvidia.conf:
+    options nvidia-drm modeset=1
+    options nvidia NVreg_UsePageAttributeTable=1
+  (not sure whether that makes a difference)
+Xorg keyboard:
+  create config file /etc/X11/xorg.conf.d/00-keyboard.conf so xorg knows about de,us keyboard and make shift+capslock switch between the two
+firewall:
+  nft from example created by the package and from the workstation example on the wiki
+  systemctl enable nftables.service
+cpu frequency:
+  install cpupower package
+  load the kernel modules by adding them to /etc/modules-load.d/virtio-net.conf
+  add governor='powersave' to /etc/default/cpupower (I think powersave is the best option for video watching and browsing)
+  systemctl enable cpupower.service
+wine:
+  access the internet:
+    sudo setcap cap_net_raw+epi /usr/bin/wine-preloader
+    sudo setcap cap_net_raw+epi /usr/bin/wine64-preloader
+trimming the ssd:
+  systemctl enable fstrim.timer
+exfat:
+  add exfat to /etc/modules-load.d/virtio-net.conf
