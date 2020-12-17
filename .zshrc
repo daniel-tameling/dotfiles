@@ -51,6 +51,7 @@ alias cp='nocorrect cp -i'
 alias mv='nocorrect mv -i'
 alias mkdir='nocorrect mkdir'
 alias man='nocorrect man'
+alias sudo='nocorrect sudo'
 alias emacs='emacs -nw' #emacs not in x11 window
 alias mu4e='emacs -f mu4e'
 alias tst="tabbed -r 2 -c -p -1 st -w ''"
