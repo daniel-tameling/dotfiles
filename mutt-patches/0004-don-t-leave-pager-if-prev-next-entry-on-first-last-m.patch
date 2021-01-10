@@ -1,7 +1,7 @@
-From 9dc8f6b753723b4a3b5eccb941efbf8b2b0b61cb Mon Sep 17 00:00:00 2001
+From 853940073115a1f7525a145c9b356e204affe5e6 Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 12 Sep 2019 21:36:56 +0200
-Subject: [PATCH 4/9] don't leave pager if prev/next-entry on first/last
+Subject: [PATCH 4/8] don't leave pager if prev/next-entry on first/last
  message
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 4/9] don't leave pager if prev/next-entry on first/last
  1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/curs_main.c b/curs_main.c
-index fee0a34c..4343a2eb 100644
+index 17187bd8..1d4f164e 100644
 --- a/curs_main.c
 +++ b/curs_main.c
 @@ -1631,6 +1631,11 @@ int mutt_index_menu (void)
@@ -64,5 +64,5 @@ index fee0a34c..4343a2eb 100644
  	}
  	menu->current--;
 -- 
-2.24.3 (Apple Git-128)
+2.29.2
 
