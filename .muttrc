@@ -1,13 +1,6 @@
-bind index,pager g noop
-macro index gi "<change-folder> =Inbox<enter>" "goto Inbox"
-macro index gd "<change-folder> =Drafts<enter>" "goto Drafts"
-macro index gs "<change-folder> =Sent<enter>" "goto Sent"
-macro index gt "<change-folder> =Trash<enter>" "goto Trash"
-macro index ga "<change-folder> =Archiv<enter>" "goto Archiv"
-bind index,pager gg change-folder
-bind index,pager G change-folder-readonly
-
-macro index,pager \ex "!mbsync -a^M" "Update through mbsync"
+macro index,pager \ex "!mbsync -a^M" "Update gmail through mbsync"
+macro index,pager \ez "!mbsync -c ~/.mbsyncrc_gmx account1^M" "Update gmx-account1 through mbsync"
+macro index,pager \ea "!mbsync -c ~/.mbsyncrc_gmx account2^M" "Update gmx-account2 through mbsync"
 bind index,pager x sync-mailbox
 bind index,pager X sync-folder-mailbox
 
@@ -15,12 +8,10 @@ bind index,pager X sync-folder-mailbox
 set move = "no"
 set resolve = "no"
 
-set sendmail="/opt/local/bin/msmtp --read-envelope-from" # choose the SMTP server according to the from field
+set sendmail="/opt/local/bin/msmtp --read-envelope-from --auto-from=off" # choose the SMTP server according to the from field
 set edit_hdrs=yes
 set signature=~/.mutt/signature
 set user_agent=no # don't include user-agent info in outgoing messages
-set from = "johndoe@gmail.com"
-set realname = "Daniel Tameling"
 set editor="emacs -Q -l ~/.emacs.d/init_files/init_mutt.el +8"
 
 set alias_file=~/.mutt/alias
@@ -42,15 +33,15 @@ set attach_format = "%u%D%I %t%4n %T%.70d%> [%.7m/%.10M, %.6e%?C?, %C?, %s] "
 # macro index,pager gf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
 
 # set my_index_format='set my_col_addr = `echo $((35 * ($(tput cols)-24-19) / 100))`; set my_col_subject = `echo $((65 * ($(tput cols)-24-19) / 100))`; set index_format="muttindexformat %4C %Z %{%a %d/%m/%Y %R} %-${my_col_addr}.${my_col_addr}L %?M?<%M> ?%-${my_col_subject}.${my_col_subject}s%> %c [%X] |"'
-set my_today=`date +%d/%m/%Y`
-set my_yesterday=`date --date yesterday +%d/%m/%Y`;
+# set my_today=`date +%d/%m/%Y`
+# set my_yesterday=`date --date yesterday +%d/%m/%Y`;
 set my_index_format='set my_index_space = `echo $(($(tput cols)-44))`; set index_format="muttindexformat ${my_index_space} %4C %Z %[%a-%d/%m/%Y-%R] %-50.50F %-50.50L %M %-100.100s%> %c [%X] ${my_today} ${my_yesterday}|"'
 
-folder-hook .* "$my_index_format"
-macro index,pager gf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
+# set index_format="%4C %Z %-17.17[%a %d. %b %Y] %-50.50F %x%> %c [%X] "
+set index_format="%4C %Z %-17.17g %F %x%> %c [%X] "
 
-subscribe .*@zsh.org .*@suckless.org lmod-users@lists.sourceforge.net isync-devel@lists.sourceforge.net .*@mutt.org
-alternates johndoe@gmail.com
+# folder-hook .* "$my_index_format"
+# macro index,pager gf "<enter-command>$my_index_format<enter><redraw-screen>" "update index formatting"
 
 # mu for searching
 macro index A "<shell-escape>mu index --rebuild --maildir=~/myMail/gmail" "rebuild mu index"
@@ -166,16 +157,11 @@ bind index,pager I sidebar-prev
 bind index,pager o sidebar-open
 
 set send_charset="utf-8"
-
-set folder = "~/myMail/gmail"
-set spoolfile = "+/Inbox"
-set postponed = "+Drafts"
-set trash = "+Trash"
 set copy="no"
 set wrap = -1
 
 # Tell mutt to use the Maildir format
-set mbox_type          = Maildir
+set mbox_type = Maildir
 
 set sort="reverse-threads"
 set strict_threads="yes"
@@ -219,19 +205,14 @@ alternative_order text/plain text/enriched text/html
 set mailcap_path = ~/.mutt/mailcap
 macro attach 'V' "<pipe-entry>iconv -c --to-code=UTF-8 > ~/.mutt/mail.html<enter><shell-escape>open ~/.mutt/mail.html<enter>"
 
-set tmpdir           = ~/.mutt/tmp          # where to keep temp files
+set tmpdir="~/.mutt/tmp"          # where to keep temp files
 set print_command="~/.mutt/print-pdf-wrapper.sh"
 
 set sidebar_visible = "yes"
 set sidebar_width = 19
-mailboxes "+Inbox" \
-          "+Sent" \
-          "+Trash" \
-          "+Drafts" \
-          "+Archiv"
 
 # Should the mailbox paths be abbreviated?
-set sidebar_short_path = "yes"
+# set sidebar_short_path = "yes"
 # Number of top-level mailbox path subdirectories to truncate for display
 # set sidebar_component_depth = 0
 # When abbreviating mailbox path names, use any of these characters as path
@@ -250,3 +231,8 @@ set sidebar_format = '%B%* %?N?%N/?%S '
 set sidebar_sort_method = 'unsorted'
 
 source ~/.mutt/colors
+
+source ~/.mutt/gmail
+macro index <f2> '<sync-mailbox><enter-command>source ~/.mutt/gmail<enter><change-folder>!<enter><check-stats>'
+macro index <f3> '<sync-mailbox><enter-command>source ~/.mutt/gmx-account1<enter><change-folder>!<enter><check-stats>'
+macro index <f4> '<sync-mailbox><enter-command>source ~/.mutt/gmx-account2<enter><change-folder>!<enter><check-stats>'

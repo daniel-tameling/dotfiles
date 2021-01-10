@@ -1,0 +1,33 @@
+bind index,pager g noop
+macro index gi "<change-folder> =Inbox<enter>" "goto Inbox"
+macro index gd "<change-folder> =Entwürfe<enter>" "goto Entwürfe"
+macro index gs "<change-folder> =Gesendet<enter>" "goto Gesendet"
+macro index gt "<change-folder> =Gelöscht<enter>" "goto Gelöscht"
+macro index gw "<change-folder> =Spamverdacht<enter>" "goto Spamverdacht"
+macro index gm "<change-folder> =Selber<enter>" "goto Selber"
+macro index ga "<change-folder> =archiv<enter>" "goto archiv"
+macro index go "<change-folder> =OUTBOX<enter>" "goto OUTBOX"
+bind index,pager gg change-folder
+bind index,pager G change-folder-readonly
+
+set hostname="gmx.net"
+set from = "account2@gmx.de"
+set realname = "Daniel Tameling"
+
+unsubscribe *
+alternates "account2@gmx.de"
+
+set folder = "~/myMail/gmx/account2"
+set spoolfile = "+Inbox"
+set postponed = "+Entwürfe"
+set trash = "+Gelöscht"
+
+unmailboxes *
+mailboxes "+Inbox" \
+          "+Gesendet" \
+          "+Gelöscht" \
+          "+Entwürfe" \
+          "+Spamverdacht" \
+          "+Selber" \
+          "+archiv" \
+          "+OUTBOX"
