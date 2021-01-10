@@ -1,7 +1,7 @@
-From 37db7261c1f888755b04e1fc65e33d32db95e6d4 Mon Sep 17 00:00:00 2001
+From 88df37b64ee3bfd44557211bee73fbc36bcc34c8 Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Sun, 15 Dec 2019 10:35:26 +0100
-Subject: [PATCH 8/9] adds my own formatting to index_format
+Subject: [PATCH 7/8] adds my own formatting to index_format
 
 no need any more to pipe something to an external tool (now much faster)
 - add %g for my own date formatting (code feels pretty hacky)
@@ -127,5 +127,5 @@ index eb441b02..b6561c4b 100644
      {
        int count = mutt_count_body_parts (ctx, hdr);
 -- 
-2.24.3 (Apple Git-128)
+2.29.2
 

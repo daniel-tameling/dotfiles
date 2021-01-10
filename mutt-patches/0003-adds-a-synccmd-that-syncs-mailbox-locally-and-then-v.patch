@@ -1,7 +1,7 @@
-From 9adab02710998d0beef334988a176477b174f226 Mon Sep 17 00:00:00 2001
+From 45608bc016073c35de5cd45e099bd6459e127c8b Mon Sep 17 00:00:00 2001
 From: Daniel Tameling <tamelingdaniel@gmail.com>
 Date: Thu, 12 Sep 2019 21:35:49 +0200
-Subject: [PATCH 3/9] adds a synccmd that syncs mailbox locally and then via
+Subject: [PATCH 3/8] adds a synccmd that syncs mailbox locally and then via
  external cmd
 
 ---
@@ -13,10 +13,10 @@ Subject: [PATCH 3/9] adds a synccmd that syncs mailbox locally and then via
  5 files changed, 25 insertions(+)
 
 diff --git a/OPS b/OPS
-index 8070a189..b27e634a 100644
+index 0733745d..aa76a517 100644
 --- a/OPS
 +++ b/OPS
-@@ -145,6 +145,7 @@ OP_MAIN_READ_SUBTHREAD "mark the current subthread as read"
+@@ -153,6 +153,7 @@ OP_MAIN_READ_SUBTHREAD "mark the current subthread as read"
  OP_MAIN_ROOT_MESSAGE "jump to root message in thread"
  OP_MAIN_SET_FLAG "set a status flag on a message"
  OP_MAIN_SYNC_FOLDER "save changes to mailbox"
@@ -25,7 +25,7 @@ index 8070a189..b27e634a 100644
  OP_MAIN_UNDELETE_PATTERN "undelete messages matching a pattern"
  OP_MAIN_UNTAG_PATTERN "untag messages matching a pattern"
 diff --git a/curs_main.c b/curs_main.c
-index 19427025..fee0a34c 100644
+index 65d4db34..17187bd8 100644
 --- a/curs_main.c
 +++ b/curs_main.c
 @@ -1222,6 +1222,7 @@ int mutt_index_menu (void)
@@ -61,10 +61,10 @@ index 19427025..fee0a34c 100644
  	if (in_pager)
  	{
 diff --git a/functions.h b/functions.h
-index a18fd266..0b6eee45 100644
+index 59e1d9c2..e5499d6e 100644
 --- a/functions.h
 +++ b/functions.h
-@@ -163,6 +163,7 @@ const struct binding_t OpMain[] = { /* map: index */
+@@ -164,6 +164,7 @@ const struct binding_t OpMain[] = { /* map: index */
    { "mark-message",		OP_MARK_MSG,			"~" },
    { "buffy-list",		OP_BUFFY_LIST,			"." },
    { "sync-mailbox",		OP_MAIN_SYNC_FOLDER,		"$" },
@@ -72,7 +72,7 @@ index a18fd266..0b6eee45 100644
    { "display-address",		OP_DISPLAY_ADDRESS,		"@" },
    { "pipe-message",		OP_PIPE,			"|" },
    { "next-new",			OP_MAIN_NEXT_NEW,		NULL },
-@@ -275,6 +276,7 @@ const struct binding_t OpPager[] = { /* map: pager */
+@@ -278,6 +279,7 @@ const struct binding_t OpPager[] = { /* map: pager */
    { "previous-page",	OP_PREV_PAGE,			"-" },
    { "top",		OP_PAGER_TOP,			"^" },
    { "sync-mailbox",	OP_MAIN_SYNC_FOLDER,            "$" },
@@ -81,10 +81,10 @@ index a18fd266..0b6eee45 100644
    { "enter-command",	OP_ENTER_COMMAND,		":" },
    { "buffy-list",	OP_BUFFY_LIST,			"." },
 diff --git a/globals.h b/globals.h
-index f56e1377..48303d1b 100644
+index d02a0f83..8a02414c 100644
 --- a/globals.h
 +++ b/globals.h
-@@ -165,6 +165,7 @@ WHERE char *SslCACertFile;
+@@ -167,6 +167,7 @@ WHERE char *SslVerifyHostOverride;
  #endif
  WHERE mbchar_table *StChars;
  WHERE char *Status;
@@ -93,10 +93,10 @@ index f56e1377..48303d1b 100644
  WHERE mbchar_table *Tochars;
  WHERE char *TrashPath;
 diff --git a/init.c b/init.c
-index 95cce331..8132f5aa 100644
+index 151a0614..663af916 100644
 --- a/init.c
 +++ b/init.c
-@@ -3715,6 +3715,9 @@ void mutt_init (int skip_sys_rc, LIST *commands)
+@@ -3753,6 +3753,9 @@ void mutt_init (int skip_sys_rc, LIST *commands)
    Editor = safe_strdup (p);
    Visual = safe_strdup (p);
  
@@ -105,7 +105,7 @@ index 95cce331..8132f5aa 100644
 +
    if ((p = getenv ("REPLYTO")) != NULL)
    {
-     BUFFER token;
+     BUFFER *token;
 -- 
-2.24.3 (Apple Git-128)
+2.29.2
 
