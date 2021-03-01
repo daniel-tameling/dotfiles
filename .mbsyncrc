@@ -47,6 +47,13 @@ Create Both
 Expunge Both
 SyncState *
 
+Channel gmail-spam
+Far :gmail-remote:"[Gmail]/Spam"
+Near :gmail-local:"Spam"
+Create Both
+Expunge Both
+SyncState *
+
 Channel gmail-starred
 Master :gmail-remote:"[Gmail]/Starred"
 Slave :gmail-local:"Starred"
@@ -66,5 +73,6 @@ Channel gmail-inbox
 Channel gmail-sent
 Channel gmail-trash
 Channel gmail-drafts
+Channel gmail-spam
 Channel gmail-starred
 Channel gmail-archiv
