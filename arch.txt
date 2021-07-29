@@ -44,6 +44,17 @@ exfat:
 hp printer/scanner:
   install hplib in addition to xsane
   maybe also sane-airscan and ipp-usb
+  install cups and cups-pdf
+  systemctl enable cups
+  to avoid conflict between cups and sane:
+    create /etc/udev/rules.d/99-printer.rules:
+      ATTRS{idVendor}=="0x03f0", ATTRS{idProduct}=="0xd911", MODE="0664", GROUP="lp", ENV{libsane_matched}="yes"
+    0x03f0 and 0xd911 come from lsusb output:
+    $ lsusb
+      Bus 001 Device 002: ID 03f0:d911 HP, Inc OfficeJet 4650 series
+    (lpinfo -v with "direct hp:/usb/OfficeJet_4650_series?serial=TH5BG3B0QQ0662" shows that that worked)
+    goto http://localhost:631/admin -> Verwaltung -> Drucker hinzufuegen and click through dialog
+
 zfs:
   install linux-lts-headers
   yay -S zfs-dkms
