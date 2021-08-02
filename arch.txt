@@ -116,3 +116,5 @@ zfs:
           keep:
             - type: last_n
     sudo systemctl enable zrepl
+run fsck every 30 boots:
+  tune2fs -c 30 /dev/nvme0n1p2
