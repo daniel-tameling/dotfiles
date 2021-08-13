@@ -157,7 +157,6 @@ bind index,pager I sidebar-prev
 bind index,pager o sidebar-open
 
 set send_charset="utf-8"
-set copy="no"
 set wrap = -1
 
 # Tell mutt to use the Maildir format

@@ -31,3 +31,5 @@ mailboxes "+Inbox" \
           "+Selber" \
           "+archiv" \
           "+OUTBOX"
+set copy="yes"
+set record="+Gesendet"

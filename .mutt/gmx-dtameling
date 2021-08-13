@@ -29,3 +29,5 @@ mailboxes "+Inbox" \
           "+Spamverdacht" \
           "+archiv" \
           "+OUTBOX"
+set copy="yes"
+set record="+Gesendet"

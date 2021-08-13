@@ -31,3 +31,4 @@ mailboxes "+Inbox" \
           "+Stocks" \
           "+Spenden" \
           "+Spam"
+set copy="no"
