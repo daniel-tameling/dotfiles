@@ -4,11 +4,10 @@ macro index,pager \ea "!mbsync -c ~/.mbsyncrc_gmx account2^M" "Update gmx-accoun
 bind index,pager x sync-mailbox
 bind index,pager X sync-folder-mailbox
 
-
 set move = "no"
 set resolve = "no"
 
-set sendmail="/opt/local/bin/msmtp --read-envelope-from --auto-from=off" # choose the SMTP server according to the from field
+set sendmail="/usr/local/bin/msmtp --read-envelope-from --auto-from=off" # choose the SMTP server according to the from field
 set edit_hdrs=yes
 set signature=~/.mutt/signature
 set user_agent=no # don't include user-agent info in outgoing messages
