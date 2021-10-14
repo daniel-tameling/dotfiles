@@ -373,4 +373,8 @@ function allcontacts(){
 }
 
 function calc() { python3 -c "print($@)" }
+
+# disable C-s and C-q as stop and continue
+stty -ixon
+
 export RIPGREP_CONFIG_PATH=~/.ripgreprc
