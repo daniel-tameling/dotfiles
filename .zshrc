@@ -358,7 +358,15 @@ function plumber() {
          open "http://$@"
     elif [[ $@ == http* ]]; then
          open "$@"
-    fi    
+    fi
+}
+
+function ccd() {
+    if [[ -d $@ ]]; then
+        cd "$@"
+    else
+        cd $(dirname "$@")
+    fi
 }
 
 function contact(){
