@@ -15,23 +15,23 @@ Inbox ~/myMail/gmx/account1/Inbox
 SubFolders Verbatim
 
 Channel gmx-account1
-Master :account1-remote:
-Slave :gmx-account1-local:
+Far :account1-remote:
+Near :gmx-account1-local:
 Patterns * !Entw* !Gel*
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmx-account1-entwuerfe
-Master :account1-remote:"Entw&APw-rfe"
-Slave :gmx-account1-local:"Entwürfe"
+Far :account1-remote:"Entw&APw-rfe"
+Near :gmx-account1-local:"Entwürfe"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmx-account1-geloescht
-Master :account1-remote:"Gel&APY-scht"
-Slave :gmx-account1-local:"Gelöscht"
+Far :account1-remote:"Gel&APY-scht"
+Near :gmx-account1-local:"Gelöscht"
 Create Both
 Expunge Both
 SyncState *
@@ -53,23 +53,23 @@ Inbox ~/myMail/gmx/account2/Inbox
 SubFolders Verbatim
 
 Channel gmx-account2
-Master :account2-remote:
-Slave :gmx-account2-local:
+Far :account2-remote:
+Near :gmx-account2-local:
 Patterns * !Entw* !Gel*
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmx-account2-entwuerfe
-Master :account2-remote:"Entw&APw-rfe"
-Slave :gmx-account2-local:"Entwürfe"
+Far :account2-remote:"Entw&APw-rfe"
+Near :gmx-account2-local:"Entwürfe"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmx-account2-geloescht
-Master :account2-remote:"Gel&APY-scht"
-Slave :gmx-account2-local:"Gelöscht"
+Far :account2-remote:"Gel&APY-scht"
+Near :gmx-account2-local:"Gelöscht"
 Create Both
 Expunge Both
 SyncState *

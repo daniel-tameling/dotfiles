@@ -19,30 +19,30 @@ Inbox ~/myMail/gmail/Inbox
 SubFolders Verbatim
 
 Channel gmail-inbox
-Master :gmail-remote:"INBOX"
-Slave :gmail-local:"Inbox"
+Far :gmail-remote:"INBOX"
+Near :gmail-local:"Inbox"
 # Patterns "INBOX" "[Gmail]/Sent Mail" "[Gmail]/Trash" "[Gmail]/Drafts" "[Gmail]/Starred" "[Gmail]/Archiv" "[Gmail]/Stocks" "[Gmail]/Spenden"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-sent
-Master :gmail-remote:"[Gmail]/Sent Mail"
-Slave :gmail-local:"Sent"
+Far :gmail-remote:"[Gmail]/Sent Mail"
+Near :gmail-local:"Sent"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-trash
-Master :gmail-remote:"[Gmail]/Trash"
-Slave :gmail-local:"Trash"
+Far :gmail-remote:"[Gmail]/Trash"
+Near :gmail-local:"Trash"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-drafts
-Master :gmail-remote:"[Gmail]/Drafts"
-Slave :gmail-local:"Drafts"
+Far :gmail-remote:"[Gmail]/Drafts"
+Near :gmail-local:"Drafts"
 Create Both
 Expunge Both
 SyncState *
@@ -55,15 +55,15 @@ Expunge Both
 SyncState *
 
 Channel gmail-starred
-Master :gmail-remote:"[Gmail]/Starred"
-Slave :gmail-local:"Starred"
+Far :gmail-remote:"[Gmail]/Starred"
+Near :gmail-local:"Starred"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-archiv
-Master :gmail-remote:"[Gmail]/Archiv"
-Slave :gmail-local:"Archiv"
+Far :gmail-remote:"[Gmail]/Archiv"
+Near :gmail-local:"Archiv"
 Create Both
 Expunge Both
 SyncState *
