@@ -21,7 +21,8 @@ eval `dircolors ~/.dir_colors`
 export LESS_TERMCAP_mb=$(tput blink; tput setaf 39) # blink
 export LESS_TERMCAP_md=$(tput bold; tput setaf 39) # bold
 export LESS_TERMCAP_me=${TURNOFF}
-export LESS_TERMCAP_so=$(tput smso; tput bold; tput setaf 214; tput setab 0) # stdout (cmdline & searches)
+# export LESS_TERMCAP_so=$(tput smso; tput bold; tput setaf 214; tput setab 0) # stdout (cmdline & searches)
+export LESS_TERMCAP_so=$(tput smso; tput bold; tput setaf 214; tput setab 16) # stdout (cmdline & searches)
 export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
 export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 39) # underline
 export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
@@ -40,13 +41,13 @@ export LANGUAGE=en_US.UTF-8
 
 # Useful aliases
 alias ls='ls $LS_OPTIONS -h'
-alias ll='ls -l' 
+alias ll='ls -l'
 alias la='ls -la'
 alias l.='ls -d .*'
 alias lt='ls -ltr'
 alias lld='ls -ld *(/)'
 
-# always prompt before overwriting on cp or mv & nocorrection for commands 
+# always prompt before overwriting on cp or mv & nocorrection for commands
 alias cp='nocorrect cp -i'
 alias mv='nocorrect mv -i'
 alias mkdir='nocorrect mkdir'
@@ -85,7 +86,7 @@ SAVEHIST=$HISTSIZE
 setopt histignorealldups sharehistory
 setopt hist_ignore_space
 
-# autocd 
+# autocd
 setopt autocd
 
 # zmv
@@ -138,7 +139,7 @@ battery_status () {
 # version control information
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' check-for-changes true 
+zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '%F{1}'
 zstyle ':vcs_info:*' stagedstr '%F{3}'
 zstyle ':vcs_info:*' actionformats '%F{2}%u%c%b%m%f-%F{1}[%a]%f'
@@ -271,7 +272,7 @@ function zle-line-finish () {
 #activate only when supported
 if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
     zle -N zle-line-init
-    zle -N zle-line-finish 
+    zle -N zle-line-finish
    # for terminator and xfce-terminal
    bindkey ';5D' emacs-backward-word
    bindkey ';5C' emacs-forward-word
@@ -295,13 +296,13 @@ my_extended_wordchars_slash="${my_extended_wordchars}/"
 
 # is the current position \-quoted ?
 function is_quoted(){
-     test "${BUFFER[$CURSOR-1,CURSOR-1]}" = "\\"     
+     test "${BUFFER[$CURSOR-1,CURSOR-1]}" = "\\"
 }
 
 unquote-forward-word(){
     while is_quoted
     do zle .forward-word
-    done    
+    done
 }
 
 unquote-backward-word(){
