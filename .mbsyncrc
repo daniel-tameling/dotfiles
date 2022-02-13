@@ -4,9 +4,9 @@ User johndoe@gmail.com
 # UseIMAPS yes
 SSLType IMAPS
 SSLVersions TLSv1.2
-CertificateFile ~/myMail/gmail/gmail.crt
-CertificateFile ~/myMail/gmail/google.crt
-CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
+# CertificateFile ~/myMail/gmail/gmail.crt
+# CertificateFile ~/myMail/gmail/google.crt
+# CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
 AuthMechs LOGIN 
 PassCmd passcmd
   
@@ -68,6 +68,41 @@ Create Both
 Expunge Both
 SyncState *
 
+Channel gmail-freebsd
+Far :gmail-remote:"FreeBSD"
+Near :gmail-local:"FreeBSD"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-openbsd
+Far :gmail-remote:"OpenBSD"
+Near :gmail-local:"OpenBSD"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-zsh
+Far :gmail-remote:"zsh"
+Near :gmail-local:"zsh"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-stocks
+Far :gmail-remote:"[Gmail]/Stocks"
+Near :gmail-local:"Stocks"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gmail-spenden
+Far :gmail-remote:"[Gmail]/Spenden"
+Near :gmail-local:"Spenden"
+Create Both
+Expunge Both
+SyncState *
+
 Group gmail
 Channel gmail-inbox
 Channel gmail-sent
@@ -76,3 +111,8 @@ Channel gmail-drafts
 Channel gmail-spam
 Channel gmail-starred
 Channel gmail-archiv
+Channel gmail-freebsd
+Channel gmail-openbsd
+Channel gmail-zsh
+Channel gmail-stocks
+Channel gmail-spenden
