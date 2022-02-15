@@ -1,0 +1,8 @@
+--colors=match:fg:yellow
+--colors=line:fg:33
+--colors=line:style:bold
+--colors=column:fg:33
+--colors=column:style:bold
+--colors=path:fg:39
+--colors=path:style:bold
+--colors=path:style:underline
