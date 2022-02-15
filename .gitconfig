@@ -5,3 +5,5 @@
 	editor = "emacs -Q -l ~/.emacs.d/init_git.el"
 [push]
 	default = simple
+[init]
+	defaultBranch = main
