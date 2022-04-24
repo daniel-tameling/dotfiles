@@ -1,22 +1,37 @@
---- config.def.h	2017-10-22 20:46:34.000000000 +0200
-+++ config.h	2017-10-22 20:54:33.000000000 +0200
-@@ -5,7 +5,11 @@
+--- config.def.h	2022-04-23 21:57:14.869281871 +0200
++++ config.h	2022-04-24 17:26:22.911988014 +0200
+@@ -5,13 +5,16 @@
   *
   * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
   */
--char font[] = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
-+/* static char font[] = "Liberation Mono:pixelsize=12:antialias=false:autohint=false"; */
-+/* static char font[] = "Monospace:size=12:antialias=false:autohint=false"; */
-+/* static char font[] = "DejaVu Sans Mono:style=Bold:pixelsize=14:antialias=true:autohint=true";  */
-+static char font[] = "Hack:size=12:antialias=false:autohint=false";
-+static int borderpx = 2;
- int borderpx = 2;
+-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
++/* static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true"; */
++/* static char font[] = "Hack:size=12:antialias=true:hinting=hintnone:lcdfilter=lcdnone:rgba=vrgb"; */
++static char font[] = "Hack:size=12:antialias=true:hinting=true:hintsyle=hintmedium:lcdfilter=lcdnone:rgba=none";
+ static int borderpx = 2;
++static char *websearch = "http://www.google.com/search?q=";
  
  /*
-@@ -84,34 +88,33 @@
+  * What program is execed by st depends of these precedence rules:
+  * 1: program passed with -e
+- * 2: scroll and/or utmp
++ * 2: utmp option
+  * 3: SHELL environment variable
+  * 4: value of shell in /etc/passwd
+  * 5: value of shell in config.h
+@@ -34,7 +37,7 @@
+  *
+  * More advanced example: L" `'\"()[]{}"
+  */
+-wchar_t *worddelimiters = L" ";
++wchar_t *worddelimiters = L" `'\"()[]{}<>|:=";
+ 
+ /* selection timeouts (in milliseconds) */
+ static unsigned int doubleclicktimeout = 300;
+@@ -95,33 +98,31 @@
  
  /* Terminal colors (16 first used in escape sequence) */
- const char *colorname[] = {
+ static const char *colorname[] = {
 -	/* 8 normal colors */
 -	"black",
 -	"red3",
@@ -42,14 +57,16 @@
 -	/* more colors can be added after 255 to use with DefaultXX */
 -	"#cccccc",
 -	"#555555",
+-	"gray90", /* default foreground colour */
+-	"black", /* default background colour */
 +  /* 8 normal colors */
 +  [0] = "#000000", /* "black", */
 +  [1] = "#f30d0d", /* "red", */
-+  [2] = "#00e600", /* "green", */
-+  [3] = "#e6e600", /* "yellow", */
-+  [4] = "#006aec", /* "blue", */
-+  [5] = "#e600e6", /* "magenta", */
-+  [6] = "#00d8d8", /* "cyan", */
++  [2] = "#0de60d", /* "green", */
++  [3] = "#e6e60d", /* "yellow", */
++  [4] = "#006aec", /* "blue", */ 
++  [5] = "#e60de6", /* "magenta", */
++  [6] = "#0dd8d8", /* "cyan", */
 +  [7] = "#d3d3d3", /* "white", */
 + 
 +  /* 8 bright colors */
@@ -60,7 +77,7 @@
 +  [12] = "#006df3", /* "blue", */
 +  [13] = "#f300f3", /* "magenta", */
 +  [14] = "#00f3f3", /* "cyan", */
-+  [15] = "#f3f3f3", /* "white", */
++  [15] = "#e6e6e6", /* "white", */
 + 
 +  /* more colors can be added after 255 to use with DefaultXX */
 +  /* [256] = "#cccccc", */
@@ -69,7 +86,84 @@
 +  [257] = "#898989",
  };
  
--
- /*
+ 
+@@ -129,10 +130,12 @@
   * Default colors (colorname index)
   * foreground, background, cursor, reverse cursor
+  */
+-unsigned int defaultfg = 258;
+-unsigned int defaultbg = 259;
++unsigned int defaultfg = 7;
++unsigned int defaultbg = 0;
+ unsigned int defaultcs = 256;
+ static unsigned int defaultrcs = 257;
++unsigned int histcountfg = 0;
++unsigned int histcountbg = 3;
+ 
+ /*
+  * Default shape of cursor
+@@ -164,11 +167,21 @@
+ static unsigned int defaultattr = 11;
+ 
+ /*
+- * Force mouse select/shortcuts while mask is active (when MODE_MOUSE is set).
+- * Note that if you want to use ShiftMask with selmasks, set this to an other
+- * modifier, set to 0 to not use it.
++ * Internal mouse shortcuts.
++ * Beware that overloading Button1 will disable the selection.
+  */
+-static uint forcemousemod = ShiftMask;
++/* static MouseShortcut mshortcuts[] = { */
++/* 	/\* button               mask            string *\/ */
++/* 	{ Button4,              XK_NO_MOD,      "\031" }, */
++/* 	{ Button5,              XK_NO_MOD,      "\005" },         */
++/* }; */
++
++/* MouseKey mkeys[] = { */
++/* static MouseShortcut mshortcuts[] = { */
++/* 	/\* button               mask            function        argument   string*\/ */
++/* 	{ Button4,              XK_NO_MOD,      kscroll,        {.i = +1}, "\031" }, */
++/* 	{ Button5,              XK_NO_MOD,      kscroll,        {.i = -1}, "\005" }, */
++/* }; */
+ 
+ /*
+  * Internal mouse shortcuts.
+@@ -199,10 +212,11 @@
+ 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
+ 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
+ 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
+-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
+ 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+-	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
+-	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
++	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i =  1} },
++	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i =  1} },
++	{ ControlMask,          XK_Page_Up,     kscrollup,      {.i = -1} },
++	{ ControlMask,          XK_Page_Down,   kscrolldown,    {.i = -1} },
+ };
+ 
+ static Specialchar specialchars[] = {
+@@ -251,6 +265,13 @@
+ static uint ignoremod = Mod2Mask|XK_SWITCH_MOD;
+ 
+ /*
++ * Force mouse select/shortcuts while mask is active (when MODE_MOUSE is set).
++ * Note that if you want to use ShiftMask with selmasks, set this to an other
++ * modifier, set to 0 to not use it.
++ */
++static uint forcemousemod = ShiftMask;
++
++/*
+  * This is the huge key array which defines all compatibility to the Linux
+  * world. Please decide about changes wisely.
+  */
+@@ -362,8 +383,8 @@
+ 	{ XK_Delete,        ShiftMask,      "\033[3;2~",    +1,    0},
+ 	{ XK_Delete,        XK_ANY_MOD,     "\033[P",       -1,    0},
+ 	{ XK_Delete,        XK_ANY_MOD,     "\033[3~",      +1,    0},
+-	{ XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0},
+ 	{ XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0},
++	{ XK_BackSpace,     XK_ANY_MOD,     "\177",          0,    0},
+ 	{ XK_Home,          ShiftMask,      "\033[2J",       0,   -1},
+ 	{ XK_Home,          ShiftMask,      "\033[1;2H",     0,   +1},
+ 	{ XK_Home,          XK_ANY_MOD,     "\033[H",        0,   -1},
