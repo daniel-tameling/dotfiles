@@ -202,7 +202,7 @@ unset markers
 auto_view text/html
 alternative_order text/plain text/enriched text/html
 set mailcap_path = ~/.mutt/mailcap
-macro attach 'V' "<pipe-entry>iconv -c --to-code=UTF-8 > ~/.mutt/mail.html<enter><shell-escape>open ~/.mutt/mail.html<enter>"
+macro attach 'V' "<pipe-entry>iconv -c --to-code=UTF-8 > ~/.mutt/mail.html<enter><shell-escape>xdg-open ~/.mutt/mail.html<enter>"
 
 set tmpdir="~/.mutt/tmp"          # where to keep temp files
 set print_command="~/.mutt/print-pdf-wrapper.sh"
