@@ -23,6 +23,8 @@ nvidia:
     options nvidia-drm modeset=1
     options nvidia NVreg_UsePageAttributeTable=1
   (not sure whether that makes a difference)
+reflector to generate a new mirror list:
+  reflector --country Belgium --country Netherlands --country Germany --age 12 --protocol https --sort rate --download-timeout 20 --verbose --save $HOME/mirrorlist.new
 Xorg keyboard:
   create config file /etc/X11/xorg.conf.d/00-keyboard.conf so xorg knows about de,us keyboard and make shift+capslock switch between the two
 firewall:
