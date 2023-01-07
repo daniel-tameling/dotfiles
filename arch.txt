@@ -23,6 +23,11 @@ nvidia:
     options nvidia-drm modeset=1
     options nvidia NVreg_UsePageAttributeTable=1
   (not sure whether that makes a difference)
+use paccache to cleanup the downloaded packages:
+  pacman does not remove old downloads by default filling up the disk
+  Install pacman-contrib
+  systemctl enable paccache.timer
+  (by default paccache keeps the last 3 versions)
 reflector to generate a new mirror list:
   reflector --country Belgium --country Netherlands --country Germany --age 12 --protocol https --sort rate --download-timeout 20 --verbose --save $HOME/mirrorlist.new
 Xorg keyboard:
