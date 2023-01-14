@@ -106,3 +106,18 @@
               (mode 16 16 :left :elide)
               " "
               filename-and-process)))
+
+;; https://emacs.stackexchange.com/questions/69670/forcing-buffers-whose-names-start-with-to-be-skipped-in-many-commands
+(defun my-buffer-predicate (buffer)
+  (let ((buffname (buffer-name buffer)))
+    (not (or (string-prefix-p "*" buffname) 
+             (string-prefix-p " *" buffname)))
+  ))
+
+(defun my-set-buffer-predicate ()
+  (modify-all-frames-parameters
+     (list
+      (cons 'buffer-predicate #'my-buffer-predicate))))
+
+(add-hook 'after-make-frame-functions 'my-set-buffer-predicate)
+(my-set-buffer-predicate)
