@@ -13,8 +13,8 @@
 (add-hook 'c-mode-common-hook 'set-my-highlighted-keywords)
 (defun set-my-highlighted-keywords ()
   "highlight FIXME, TODO etc."
-  (font-lock-add-keywords nil 
-  '(("\\<\\(FIXME\\|TODO\\|XXX+\\|BUG\\)" 
+  (font-lock-add-keywords nil
+  '(("\\<\\(FIXME\\|TODO\\|XXX+\\|BUG\\)"
      1 font-lock-warning-face prepend))))
 ;(set-face-underline 'font-lock-warning-face t)
 (set-face-background 'font-lock-warning-face "blue4")
@@ -25,6 +25,9 @@
 
 ;; circumvent bug in python-mode
 (setq python-shell-completion-native-enable nil)
+
+;; // style comments in c files
+(add-hook 'c-mode-hook (lambda () (c-toggle-comment-style -1)))
 
 ;; ;; semantic
 ;; (add-hook 'c-mode-common-hook 'my-activate-semantic)
@@ -61,3 +64,6 @@
 (set-face-attribute 'company-tooltip-annotation-selection nil :foreground "#d96100")
 (set-face-attribute 'company-scrollbar-fg nil :background "#666666" :foreground "#000000")
 (set-face-attribute 'company-scrollbar-bg nil :background "#bbbbbb" :foreground "#000000")
+
+;; highlight trailing whitespace
+(setq-default show-trailing-whitespace t)

@@ -27,6 +27,9 @@
 ;; kill whole line
 (global-set-key (kbd "M-k") 'kill-whole-line)
 
+;; always add a newline to end of files
+(setq require-final-newline t)
+
 (menu-bar-mode -1)
 
 (setq neo-theme 'arrow)
