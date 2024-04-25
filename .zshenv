@@ -23,6 +23,14 @@ new_path+=(/Users/tameling/.gem/ruby/2.6.0/bin)
 # go
 new_path+=(/Users/tameling/go/bin)
 
+# npm
+export npm_config_prefix="$HOME/.local"
+export NODE_PATH=$(npm root --quiet -g)
+
+if [ -d "$HOME/.local/bin" ] ; then
+    new_path+=($HOME/.local/bin)
+fi
+
 # clangd
 new_path+=(/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/)
 
