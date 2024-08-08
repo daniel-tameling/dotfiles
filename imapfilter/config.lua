@@ -14,11 +14,17 @@ account1 = IMAP {
 -- update, event = account1["INBOX"]:enter_idle()
 -- print(update, event)
 
-messages = account1["INBOX"]:contain_field("List-Id", "freebsd.org")
+messages = account1["INBOX"]:contain_field("List-Id", "freebsd.org") + account1["INBOX"]:contain_from("bugzilla-noreply@freebsd.org")
++ account1["INBOX"]:contain_to("phabric-noreply@FreeBSD.org")
++ account1["[Gmail]/Spam"]:contain_field("List-Id", "freebsd.org") + account1["[Gmail]/Spam"]:contain_from("bugzilla-noreply@freebsd.org")
++ account1["INBOX"]:contain_cc("freebsd.org") + account1["[Gmail]/Spam"]:contain_cc("freebsd.org")
 messages:move_messages(account1["FreeBSD"])
 
-messages = account1["INBOX"]:contain_field("List-ID", "tech@openbsd.org")
+messages = account1["INBOX"]:contain_field("List-ID", "tech@openbsd.org") + account1["[Gmail]/Spam"]:contain_field("List-ID", "tech@openbsd.org")
 messages:move_messages(account1["OpenBSD"])
 
-messages = account1["INBOX"]:contain_field("List-Id", "zsh.org")
-messages:move_messages(account1["zsh"])
+messages = account1["[Gmail]/Trash"]:is_unseen()
+messages:mark_seen()
+
+-- messages = account1["INBOX"]:contain_field("List-Id", "zsh.org")
+-- messages:move_messages(account1["zsh"])
