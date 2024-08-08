@@ -2,14 +2,14 @@ IMAPAccount PrivatGmail
 Host imap.gmail.com
 User johndoe@gmail.com
 # UseIMAPS yes
-SSLType IMAPS
-SSLVersions TLSv1.2
+TLSType IMAPS
+# TLSVersions +1.2
 # CertificateFile ~/myMail/gmail/gmail.crt
 # CertificateFile ~/myMail/gmail/google.crt
 # CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
-AuthMechs LOGIN 
+AuthMechs LOGIN
 PassCmd passcmd
-  
+
 IMAPStore gmail-remote
 Account PrivatGmail
 
@@ -82,12 +82,12 @@ Create Both
 Expunge Both
 SyncState *
 
-Channel gmail-zsh
-Far :gmail-remote:"zsh"
-Near :gmail-local:"zsh"
-Create Both
-Expunge Both
-SyncState *
+# Channel gmail-zsh
+# Far :gmail-remote:"zsh"
+# Near :gmail-local:"zsh"
+# Create Both
+# Expunge Both
+# SyncState *
 
 Channel gmail-stocks
 Far :gmail-remote:"[Gmail]/Stocks"
@@ -113,6 +113,6 @@ Channel gmail-starred
 Channel gmail-archiv
 Channel gmail-freebsd
 Channel gmail-openbsd
-Channel gmail-zsh
+# Channel gmail-zsh
 Channel gmail-stocks
 Channel gmail-spenden

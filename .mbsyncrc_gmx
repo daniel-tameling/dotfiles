@@ -2,9 +2,10 @@ IMAPAccount GMX-account1
 Host imap.gmx.net
 User account1@gmx.de
 # UseIMAPS yes
-SSLType IMAPS
-SSLVersions TLSv1.2
-AuthMechs LOGIN 
+TLSType IMAPS
+# TLSVersions +1.2
+AuthMechs LOGIN
+PassCmd passcmd
 
 IMAPStore account1-remote
 Account GMX-account1
@@ -17,21 +18,7 @@ SubFolders Verbatim
 Channel gmx-account1
 Far :account1-remote:
 Near :gmx-account1-local:
-Patterns * !Entw* !Gel*
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmx-account1-entwuerfe
-Far :account1-remote:"Entw&APw-rfe"
-Near :gmx-account1-local:"Entwürfe"
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmx-account1-geloescht
-Far :account1-remote:"Gel&APY-scht"
-Near :gmx-account1-local:"Gelöscht"
+Patterns *
 Create Both
 Expunge Both
 SyncState *
@@ -40,10 +27,11 @@ IMAPAccount GMX-account2
 Host imap.gmx.net
 User account2@gmx.de
 # UseIMAPS yes
-SSLType IMAPS
-SSLVersions TLSv1.2
-AuthMechs LOGIN 
-  
+TLSType IMAPS
+# TLSVersions +1.2
+AuthMechs LOGIN
+PassCmd passcmd
+
 IMAPStore account2-remote
 Account GMX-account2
 
@@ -55,31 +43,13 @@ SubFolders Verbatim
 Channel gmx-account2
 Far :account2-remote:
 Near :gmx-account2-local:
-Patterns * !Entw* !Gel*
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmx-account2-entwuerfe
-Far :account2-remote:"Entw&APw-rfe"
-Near :gmx-account2-local:"Entwürfe"
-Create Both
-Expunge Both
-SyncState *
-
-Channel gmx-account2-geloescht
-Far :account2-remote:"Gel&APY-scht"
-Near :gmx-account2-local:"Gelöscht"
+Patterns *
 Create Both
 Expunge Both
 SyncState *
 
 Group account1
 Channel gmx-account1
-Channel gmx-account1-entwuerfe
-Channel gmx-account1-geloescht
 
 Group account2
 Channel gmx-account2
-Channel gmx-account2-entwuerfe
-Channel gmx-account2-geloescht
