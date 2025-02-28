@@ -1,0 +1,9 @@
+Install gem
+gem install --user-install bundler
+add $HOME/.gem/ruby/$RUBY_VERSION/bin to the PATH
+bundle config set --local path "$HOME/.gem"
+now you can just remove $HOME/.gem to cleanup an old installation
+gem list
+gem cleanup
+bundle install
+bundle update --all
