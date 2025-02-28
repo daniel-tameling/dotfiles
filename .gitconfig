@@ -3,7 +3,18 @@
 	email = johndoe@gmail.com
 [core]
 	editor = "emacs -Q -l ~/.emacs.d/init_git.el"
+	excludesfile = /home/daniel/.gitignore_global
 [push]
 	default = simple
 [init]
 	defaultBranch = main
+[branch]
+        sort = -committerdate
+[tag]
+        sort = version:refname
+[diff]
+        algorithm = histogram
+        renames = true
+[fetch]
+        prune = true
+        pruneTags = true
