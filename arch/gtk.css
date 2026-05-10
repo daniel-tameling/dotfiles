@@ -3,7 +3,7 @@
 
 /* tasklist (window buttons) label text color */
 /* .tasklist>*>box { color: #00f } */
-#datetime-24 button {
+#clock-28 button {
     color: #cecece;
     font-weight: bolder;
     text-shadow: 1px 1px rgba(0, 0, 0, 1);
